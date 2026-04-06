@@ -2,15 +2,11 @@
 
 
 
-!\[.NET](https://img.shields.io/badge/.NET-9.0-512BD4?style=for-the-badge\&logo=dotnet)
-
-!\[ElasticSearch](https://img.shields.io/badge/ElasticSearch-005571?style=for-the-badge\&logo=elasticsearch)
-
-!\[Redis](https://img.shields.io/badge/redis-DC382D?style=for-the-badge\&logo=redis\&logoColor=white)
-
-!\[Docker](https://img.shields.io/badge/docker-2496ED?style=for-the-badge\&logo=docker\&logoColor=white)
-
-!\[Tailwind](https://img.shields.io/badge/Tailwind\_CSS-38B2AC?style=for-the-badge\&logo=tailwind-css\&logoColor=white)
+![.NET](https://img.shields.io/badge/.NET-9.0-512BD4?style=for-the-badge&logo=dotnet)
+![ElasticSearch](https://img.shields.io/badge/ElasticSearch-005571?style=for-the-badge&logo=elasticsearch)
+![Redis](https://img.shields.io/badge/redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Tailwind](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
 
 
@@ -158,7 +154,7 @@ dotnet run --project MovieMvcProject.Web
 
 <td align="center">
 
-<img src="project\_screenshoot/movieverseAdminDashboardPage.png" width="400" alt="Admin Dashboard">
+<img src="project/movieverseAdminDashboardPage.png" width="400" alt="Admin Dashboard">
 
 
 
@@ -170,7 +166,7 @@ dotnet run --project MovieMvcProject.Web
 
 <td align="center">
 
-<img src="project\_screenshoot/movieverseAISuggestPage.png" width="400" alt="AI Suggest">
+<img src="project/movieverseAISuggestPage.png" width="400" alt="AI Suggest">
 
 
 
@@ -186,7 +182,7 @@ dotnet run --project MovieMvcProject.Web
 
 <td align="center">
 
-<img src="project\_screenshoot/movieverseFilmAramaSayfası.png" width="400" alt="Search Page">
+<img src="project/movieverseFilmAramaSayfası.png" width="400" alt="Search Page">
 
 
 
@@ -198,7 +194,7 @@ dotnet run --project MovieMvcProject.Web
 
 <td align="center">
 
-<img src="project\_screenshoot/movieverseAdminMovieListPage.png" width="400" alt="Movie List">
+<img src="project/movieverseAdminMovieListPage.png" width="400" alt="Movie List">
 
 
 
@@ -226,7 +222,7 @@ dotnet run --project MovieMvcProject.Web
 
 <td align="center">
 
-<img src="project\_screenshoot/movieverseError404.png" width="400" alt="404 Error">
+<img src="project/movieverseError404.png" width="400" alt="404 Error">
 
 
 
@@ -238,7 +234,7 @@ dotnet run --project MovieMvcProject.Web
 
 <td align="center">
 
-<img src="project\_screenshoot/movieverseError401.png" width="400" alt="401 Error">
+<img src="project/movieverseError401.png" width="400" alt="401 Error">
 
 
 
