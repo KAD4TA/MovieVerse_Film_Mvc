@@ -1,0 +1,45 @@
+﻿@model MovieMvcProject.Web.Areas.Admin.Models.DashboardViewModel
+@using Microsoft.Extensions.Localization
+@using MovieMvcProject.Web.Areas.Admin.Resources
+@inject IStringLocalizer<AdminResource> AdminLocalizer
+
+<div class="lg:col-span-2 bg-white dark:bg-[#1e293b] rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+    <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center mb-8 gap-4">
+        <h2 class="text-xl font-bold dark:text-white flex items-center gap-2">
+            <span id="chartIcon" class="w-2 h-6 bg-neon-blue rounded-full"></span>
+            @AdminLocalizer["Dashboard.AnalyticsOverview"]
+        </h2>
+        <div class="flex flex-wrap items-center gap-3">
+            <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+                <button onclick="setChartCategory('users')" id="catUsers" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all text-neon-blue bg-white dark:bg-slate-700 shadow-sm">@AdminLocalizer["Dashboard.Users"]</button>
+                <button onclick="setChartCategory('visitors')" id="catVisitors" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-500">@AdminLocalizer["Dashboard.Visitors"]</button>
+            </div>
+
+            <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+                <button onclick="setChartDays(7)" class="time-btn px-3 py-1.5 text-xs font-bold rounded-lg active" data-days="7">@AdminLocalizer["Dashboard.Days7"]</button>
+                <button onclick="setChartDays(30)" class="time-btn px-3 py-1.5 text-xs font-bold rounded-lg" data-days="30">@AdminLocalizer["Dashboard.Days30"]</button>
+                <button onclick="setChartDays(365)" class="time-btn px-3 py-1.5 text-xs font-bold rounded-lg" data-days="365">@AdminLocalizer["Dashboard.Days365"]</button>
+            </div>
+
+            <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl items-center">
+                <button onclick="toggleChartType()" id="btnType" class="control-btn px-2 py-1.5 rounded-lg text-slate-500 hover:text-slate-800 dark:hover:text-white transition-all" title="Toggle Bar/Line">
+                    <span class="material-symbols-outlined text-sm">bar_chart</span>
+                </button>
+                <div class="w-px h-4 bg-slate-300 dark:bg-slate-600 mx-1"></div>
+                <button onclick="toggleGrid()" id="btnGrid" class="control-btn px-2 py-1.5 rounded-lg text-slate-500 hover:text-slate-800 dark:hover:text-white transition-all" title="Toggle Grid">
+                    <span class="material-symbols-outlined text-sm">grid_4x4</span>
+                </button>
+                <button onclick="toggleLabels()" id="btnLabels" class="control-btn px-2 py-1.5 rounded-lg text-slate-500 hover:text-slate-800 dark:hover:text-white transition-all" title="Toggle Labels">
+                    <span class="material-symbols-outlined text-sm">tag</span>
+                </button>
+            </div>
+
+            <button onclick="openReportModal()" class="px-3 py-1.5 text-xs font-bold rounded-lg transition-all text-white bg-slate-700 hover:bg-slate-600 flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">table_view</span>
+                @AdminLocalizer["Dashboard.Report"]
+            </button>
+        </div>
+    </div>
+    <div class="h-[400px]"><canvas id="mainActivityChart"></canvas></div>
+    <p class="text-xs text-slate-400 mt-2 text-center italic">@AdminLocalizer["Dashboard.ScrollZoomPan"]</p>
+</div>

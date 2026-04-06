@@ -1,0 +1,59 @@
+﻿.wishlist-main {
+    min-height: 100vh;
+    background-color: #0f121d;
+    padding-top: 8rem;
+    padding-bottom: 5rem;
+}
+
+.page-link-custom {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #94a3b8;
+    transition: all 0.3s ease;
+}
+
+    .page-link-custom:hover:not(.disabled) {
+        background: #3b82f6;
+        color: white;
+        border-color: #3b82f6;
+        box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+    }
+
+    .page-link-custom.active {
+        background: white;
+        color: black;
+        font-weight: 900;
+    }
+
+    .page-link-custom.disabled {
+        opacity: 0.2;
+        pointer-events: none;
+    }
+
+.glass-panel {
+    background: rgba(255,255,255,0.02);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.toastify {
+    border-radius: 14px;
+    box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.25);
+    font-weight: 600;
+    padding: 16px 20px;
+    font-size: 15px;
+}
+
+.toast-success {
+    color: #fff;
+}
+
+.toast-error {
+    color: #fff;
+}

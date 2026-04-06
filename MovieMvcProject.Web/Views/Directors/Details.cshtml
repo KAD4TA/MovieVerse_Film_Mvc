@@ -1,0 +1,19 @@
+﻿@model DirectorDetailViewModel
+
+@{
+    ViewData["Title"] = Model.PageTitle;
+    Layout = "_Layout";
+}
+
+@section Styles {
+    @* Sabit CSS dosyamızı buraya çağırıyoruz *@
+    <link rel="stylesheet" href="~/css/director/director-details.css" asp-append-version="true" />
+}
+
+@* İçerik Partial'ını Model ile birlikte çağırıyoruz *@
+<partial name="Director/_DirectorDetailsPartial" model="Model" />
+
+@section Scripts {
+    @* JS dosyamızı buraya çağırıyoruz *@
+    <script src="~/js/director/director-details.js" asp-append-version="true"></script>
+}

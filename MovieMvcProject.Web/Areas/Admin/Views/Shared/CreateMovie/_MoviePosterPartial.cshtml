@@ -1,0 +1,27 @@
+﻿@model MovieCreateUpdateViewModel
+@using Microsoft.Extensions.Localization
+@using MovieMvcProject.Web.Areas.Admin.Models
+@using MovieMvcProject.Web.Areas.Admin.Resources
+@inject IStringLocalizer<AdminResource> Localizer
+
+<link rel="stylesheet" href="~/css/admin/movie-form.css" asp-append-version="true" />
+
+<section class="form-glass rounded-2xl p-6 shadow-sm dark:shadow-none">
+    <h2 class="font-bold uppercase tracking-wider text-sm mb-4 flex items-center gap-2">
+        <span class="material-symbols-outlined text-yellow-500">image</span> @Localizer["Section.MoviePoster"]
+    </h2>
+    <div class="space-y-4">
+        <input asp-for="PosterUrl" id="PosterUrlInput" class="w-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none font-mono" placeholder="https://..." />
+        <div class="aspect-[2/3] w-full bg-slate-100 dark:bg-black/40 rounded-2xl border-2 border-dashed border-slate-200 dark:border-white/10 overflow-hidden relative group">
+            <img id="poster-preview" src="@Model.PosterUrl" class="w-full h-full object-cover transition-opacity duration-300 @(string.IsNullOrEmpty(Model.PosterUrl) ? "hidden" : "")" />
+            <div id="poster-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 dark:text-white/20 @(string.IsNullOrEmpty(Model.PosterUrl) ? "" : "hidden")">
+                <span class="material-symbols-outlined text-5xl mb-2 font-light">add_photo_alternate</span>
+                <span class="text-xs uppercase font-bold tracking-widest">@Localizer["Text.PreviewNotAvailable"]</span>
+            </div>
+            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                <span class="text-xs font-bold text-white uppercase tracking-wider border border-white/30 px-3 py-1 rounded-full backdrop-blur-md">@Localizer["Text.ChangeImage"]</span>
+            </div>
+        </div>
+        <p class="text-[10px] text-slate-400 dark:text-white/30 text-center italic">@Localizer["Text.PreviewAutoUpdate"]</p>
+    </div>
+</section>

@@ -1,0 +1,119 @@
+﻿@model MovieMvcProject.Web.Models.RegisterViewModel
+@using MovieMvcProject.Domain.Enums
+@using MovieMvcProject.Web.Helpers
+@inject MovieMvcProject.Application.Interfaces.ILocalization.ILocalizationService Loc
+
+<div class="w-full max-w-md rounded-2xl bg-black/55 p-8 backdrop-blur-xl shadow-2xl border border-white/10">
+    <h1 class="mb-8 text-center text-4xl font-black tracking-tight text-white">
+        @Loc.GetLocalizedHtmlString("RegisterResource", "RegisterTitle")
+    </h1>
+
+    <form asp-action="Register" method="post" enctype="multipart/form-data" class="space-y-6">
+        @Html.AntiForgeryToken()
+
+        <div>
+            <label class="block text-sm font-medium mb-2">@Loc.GetLocalizedHtmlString("RegisterResource", "FullNameLabel")</label>
+            <input asp-for="FullName"
+                   class="w-full px-4 py-3 rounded-lg bg-gray-900/70 border border-gray-700 text-gray-300 placeholder-gray-500 focus:border-primary focus:outline-none transition"
+                   placeholder="@Loc.GetLocalizedHtmlString("RegisterResource", "FullNamePlaceholder")" />
+            <span asp-validation-for="FullName" class="text-red-400 text-xs mt-1"></span>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium mb-2">@Loc.GetLocalizedHtmlString("RegisterResource", "EmailLabel")</label>
+            <input asp-for="Email" type="email"
+                   class="w-full px-4 py-3 rounded-lg bg-gray-900/70 border border-gray-700 text-gray-300 placeholder-gray-500 focus:border-primary focus:outline-none transition"
+                   placeholder="@Loc.GetLocalizedHtmlString("RegisterResource", "EmailPlaceholder")" />
+            <span asp-validation-for="Email" class="text-red-400 text-xs mt-1"></span>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium mb-2">@Loc.GetLocalizedHtmlString("RegisterResource", "PasswordLabel")</label>
+            <div class="password-wrapper">
+                <input asp-for="Password" id="PasswordInput" type="password" minlength="8"
+                       class="w-full px-4 py-3 rounded-lg bg-gray-900/70 border border-gray-700 text-gray-300 placeholder-gray-500 focus:border-primary focus:outline-none transition"
+                       placeholder="@Loc.GetLocalizedHtmlString("RegisterResource", "PasswordPlaceholder")" />
+                <button type="button" id="togglePassword" class="toggle-password material-symbols-outlined">visibility</button>
+            </div>
+            <span asp-validation-for="Password" class="text-red-400 text-xs mt-1"></span>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium mb-2">@Loc.GetLocalizedHtmlString("RegisterResource", "ConfirmPasswordLabel")</label>
+            <div class="password-wrapper">
+                <input asp-for="ConfirmPassword" id="ConfirmPasswordInput" type="password" minlength="8"
+                       class="w-full px-4 py-3 rounded-lg bg-gray-900/70 border border-gray-700 text-gray-300 placeholder-gray-500 focus:border-primary focus:outline-none transition"
+                       placeholder="@Loc.GetLocalizedHtmlString("RegisterResource", "ConfirmPasswordPlaceholder")" />
+                <button type="button" id="toggleConfirmPassword" class="toggle-password material-symbols-outlined">visibility</button>
+            </div>
+            <span asp-validation-for="ConfirmPassword" class="text-red-400 text-xs mt-1"></span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium mb-2">@Loc.GetLocalizedHtmlString("RegisterResource", "BirthDateLabel")</label>
+                <input asp-for="BirthDate" type="date"
+                       class="w-full px-4 py-3 rounded-lg bg-gray-900/70 border border-gray-700 text-gray-300 focus:border-primary focus:outline-none transition" />
+                <span asp-validation-for="BirthDate" class="text-red-400 text-xs mt-1"></span>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-2">@Loc.GetLocalizedHtmlString("RegisterResource", "GenderLabel")</label>
+                <select asp-for="Gender" asp-items="@EnumSelectListHelper.GetLocalizedEnumSelectList<Gender>(Loc)"
+                        class="w-full px-4 py-3 rounded-lg bg-gray-900/70 border border-gray-700 text-gray-300 focus:border-primary focus:outline-none transition">
+                    <option value="">@Loc.GetLocalizedHtmlString("RegisterResource", "SelectGender")</option>
+                </select>
+                <span asp-validation-for="Gender" class="text-red-400 text-xs mt-1"></span>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium mb-2">@Loc.GetLocalizedHtmlString("RegisterResource", "InstagramUrlLabel")</label>
+            <div class="input-with-icon">
+                <i class="input-icon fa-brands fa-instagram"></i>
+                <input asp-for="InstagramUrl" type="url"
+                       class="w-full px-4 py-3 rounded-lg bg-gray-900/70 border border-gray-700 text-gray-300 placeholder-gray-500 focus:border-primary focus:outline-none transition"
+                       placeholder="@Loc.GetLocalizedHtmlString("RegisterResource", "InstagramUrlPlaceholder")" />
+            </div>
+            <span asp-validation-for="InstagramUrl" class="text-red-400 text-xs mt-1"></span>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium mb-2">@Loc.GetLocalizedHtmlString("RegisterResource", "TwitterUrlLabel")</label>
+            <div class="input-with-icon">
+                <i class="input-icon fa-brands fa-x-twitter"></i>
+                <input asp-for="TwitterUrl" type="url"
+                       class="w-full px-4 py-3 rounded-lg bg-gray-900/70 border border-gray-700 text-gray-300 placeholder-gray-500 focus:border-primary focus:outline-none transition"
+                       placeholder="@Loc.GetLocalizedHtmlString("RegisterResource", "TwitterUrlPlaceholder")" />
+            </div>
+            <span asp-validation-for="TwitterUrl" class="text-red-400 text-xs mt-1"></span>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium mb-2">@Loc.GetLocalizedHtmlString("RegisterResource", "ProfileImageFileLabel")</label>
+            <div class="flex items-center gap-4">
+                <label for="ProfileImageFile" class="cursor-pointer px-6 py-3 bg-primary hover:bg-primary/90 text-white font-medium rounded-lg transition">
+                    @Loc.GetLocalizedHtmlString("RegisterResource", "SelectFile")
+                </label>
+                <input asp-for="ProfileImageFile" id="ProfileImageFile" type="file" accept="image/*" class="hidden" />
+                <span id="fileNameDisplay" class="text-gray-400">@Loc.GetLocalizedHtmlString("RegisterResource", "NoFileSelected")</span>
+            </div>
+            <span asp-validation-for="ProfileImageFile" class="text-red-400 text-xs mt-1 block"></span>
+        </div>
+
+        <button type="submit" class="w-full py-4 bg-primary hover:bg-primary/90 text-white font-bold text-lg rounded-lg transition shadow-lg">
+            @Loc.GetLocalizedHtmlString("RegisterResource", "RegisterButton")
+        </button>
+    </form>
+
+    <p class="text-center mt-6 text-gray-400">
+        @Loc.GetLocalizedHtmlString("RegisterResource", "HaveAccount")
+        <a asp-controller="Account" asp-action="Login" class="text-primary hover:underline font-medium">
+            @Loc.GetLocalizedHtmlString("RegisterResource", "LoginLink")
+        </a>
+    </p>
+</div>
+
+<script>
+    
+    setupFileDisplay('ProfileImageFile', 'fileNameDisplay', '@Loc.GetLocalizedHtmlString("RegisterResource", "NoFileSelected")');
+</script>

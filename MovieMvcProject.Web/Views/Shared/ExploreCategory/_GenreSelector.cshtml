@@ -1,0 +1,52 @@
+﻿@model string
+@using Microsoft.AspNetCore.Mvc.Localization
+@using MovieMvcProject.Domain.Resources
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<EnumResource> EnumLocalizer
+@inject IStringLocalizer<MovieResource> MovieLocalizer
+
+<div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 mb-24">
+    @{
+        var genres = new[] {
+            new { Key = "Action",    Icon = "bolt",               Color = "#ff4d4d", Alpha = "rgba(255, 77, 77, 0.2)" },
+            new { Key = "Drama",     Icon = "masks",              Color = "#4ade80", Alpha = "rgba(74, 222, 128, 0.2)" },
+            new { Key = "SciFi",     Icon = "rocket_launch",      Color = "#a855f7", Alpha = "rgba(168, 85, 247, 0.2)" },
+            new { Key = "Horror",    Icon = "skull",              Color = "#ffffff", Alpha = "rgba(255, 255, 255, 0.1)" },
+            new { Key = "Anime",     Icon = "auto_awesome",       Color = "#fbbf24", Alpha = "rgba(251, 191, 36, 0.2)" },
+            new { Key = "Thriller",  Icon = "visibility",         Color = "#f43f5e", Alpha = "rgba(244, 63, 94, 0.2)" },
+            new { Key = "Comedy",    Icon = "sentiment_very_satisfied", Color = "#22d3ee", Alpha = "rgba(34, 211, 238, 0.2)" },
+            new { Key = "Romance",   Icon = "favorite",           Color = "#ec4899", Alpha = "rgba(236, 72, 153, 0.2)" },
+            new { Key = "Fantasy",   Icon = "auto_fix_high",      Color = "#6366f1", Alpha = "rgba(99, 102, 241, 0.2)" },
+            new { Key = "Adventure", Icon = "explore",            Color = "#f59e0b", Alpha = "rgba(245, 158, 11, 0.2)" },
+            new { Key = "Crime",     Icon = "fingerprint",        Color = "#64748b", Alpha = "rgba(100, 116, 139, 0.2)" },
+            new { Key = "Documentary", Icon = "menu_book",        Color = "#10b981", Alpha = "rgba(16, 185, 129, 0.2)" },
+            new { Key = "Animation", Icon = "palette",            Color = "#fb923c", Alpha = "rgba(251, 146, 60, 0.2)" },
+            new { Key = "Musical",   Icon = "music_note",         Color = "#8b5cf6", Alpha = "rgba(139, 92, 246, 0.2)" },
+            new { Key = "Western",   Icon = "grade",              Color = "#b45309", Alpha = "rgba(180, 83, 9, 0.2)" },
+            new { Key = "Biography", Icon = "history_edu",        Color = "#eab308", Alpha = "rgba(234, 179, 8, 0.2)" },
+            new { Key = "War",       Icon = "military_tech",      Color = "#4d7c0f", Alpha = "rgba(77, 124, 15, 0.2)" }
+        };
+    }
+
+    @foreach (var genre in genres)
+    {
+        var isActive = Model == genre.Key;
+        <div class="genre-card p-6 cursor-pointer group clickable-card"
+             style="--genre-color: @genre.Color; --genre-color-alpha: @genre.Alpha; @(isActive ? $"border-color:{genre.Color}; background:rgba(255,255,255,0.08);" : "")"
+             data-url="@Url.Action("ExploreCategory", "Movie", new { category = genre.Key })">
+            
+            <div class="relative z-10 flex flex-col items-start">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-colors"
+                     style="background: @genre.Alpha">
+                    <span class="material-symbols-outlined text-3xl" style="color: @genre.Color">@genre.Icon</span>
+                </div>
+                <h3 class="text-xl font-bold text-white/90 group-hover:text-white transition-colors">
+                    @EnumLocalizer[$"Category_{genre.Key}"]
+                </h3>
+                <p class="text-xs text-gray-500 mt-1 uppercase tracking-tighter">
+                    @MovieLocalizer["ExploreCollection"]
+                </p>
+            </div>
+        </div>
+    }
+</div>

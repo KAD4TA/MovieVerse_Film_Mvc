@@ -1,0 +1,188 @@
+﻿@model IEnumerable<MovieMvcProject.Web.Areas.Admin.Models.UserViewModel>
+@using Microsoft.Extensions.Localization
+@using MovieMvcProject.Web.Areas.Admin.Resources
+
+@inject IStringLocalizer<AdminResource> Localizer
+
+@{
+    var currentSearch = ViewBag.SearchTerm as string;
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
+    int totalUserCount = ViewBag.TotalUserCount ?? 0;
+}
+
+<link rel="stylesheet" href="~/css/admin/user-list.css" asp-append-version="true" />
+
+<div class="min-h-screen bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300">
+    <div class="container mx-auto px-6 py-10">
+        <!-- ÜST BAŞLIK + ARAMA  -->
+        <div class="flex flex-col lg:flex-row justify-between items-center mb-10 gap-8">
+            <div class="flex items-center gap-5">
+                <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center border border-orange-500/20 shadow-lg dark:shadow-orange-500/10">
+                    <span class="material-icons-outlined text-orange-500 text-3xl">people</span>
+                </div>
+                <div>
+                    <div class="flex items-center gap-3">
+                        <h1 class="text-3xl font-bold text-slate-800 dark:text-white tracking-tight">@Localizer["UserList.Title"]</h1>
+                        <span class="px-2.5 py-0.5 bg-orange-500 text-white text-[11px] font-black rounded-lg shadow-lg shadow-orange-500/20 animate-pulse">
+                            @totalUserCount @Localizer["Common.Users"]
+                        </span>
+                    </div>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-[0.2em]">@Localizer["UserList.SystemUserDatabase"]</p>
+                </div>
+            </div>
+
+            <form asp-action="UserList" method="get" id="userSearchForm" class="w-full lg:w-96 relative group">
+                <div class="relative flex items-center">
+                    <button type="submit" class="absolute left-2 p-2 rounded-xl text-slate-400 hover:text-orange-500 hover:bg-orange-500/10 transition-all z-10">
+                        <span class="material-icons-outlined">search</span>
+                    </button>
+                    <input type="text" name="searchTerm" value="@currentSearch"
+                           placeholder="@Localizer["Common.SearchPlaceholder"]"
+                           class="w-full pl-12 pr-12 py-3 bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 rounded-2xl text-slate-700 dark:text-gray-200 placeholder-slate-400 dark:placeholder-gray-600 focus:ring-2 focus:ring-orange-500/40 focus:border-orange-500/40 transition-all shadow-sm dark:shadow-2xl outline-none" />
+                    @if (!string.IsNullOrEmpty(currentSearch))
+                    {
+                        <a asp-action="UserList" class="absolute right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">
+                            <span class="material-icons-outlined text-xl">close</span>
+                        </a>
+                    }
+                </div>
+            </form>
+        </div>
+
+        <!-- TABLO + PAGINATION  -->
+        <div class="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 rounded-[2rem] shadow-sm dark:shadow-2xl overflow-hidden transition-all">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                   
+                    <thead>
+                        <tr class="bg-slate-50/50 dark:bg-white/[0.02] border-b border-slate-100 dark:border-white/5">
+                            <th class="px-8 py-5 text-[10px] font-black text-slate-400 dark:text-gray-500 uppercase tracking-widest">@Localizer["UserList.UserInfo"]</th>
+                            <th class="px-8 py-5 text-[10px] font-black text-slate-400 dark:text-gray-500 uppercase tracking-widest">@Localizer["Label.Email"]</th>
+                            <th class="px-8 py-5 text-[10px] font-black text-slate-400 dark:text-gray-500 uppercase tracking-widest">@Localizer["UserList.RoleGroup"]</th>
+                            <th class="px-8 py-5 text-right text-[10px] font-black text-slate-400 dark:text-gray-500 uppercase tracking-widest">@Localizer["Common.Actions"]</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-white/5">
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                var photoUrl = string.IsNullOrEmpty(item.UserPhoto) ? "/profile-images/default-profile.png" : item.UserPhoto;
+                                <tr class="group hover:bg-slate-50/50 dark:hover:bg-white/[0.01] transition-all hover:scale-[1.002]">
+                                    <td class="px-8 py-5">
+                                        <div class="flex items-center gap-4">
+                                            <div class="relative">
+                                                <img src="@photoUrl" class="h-12 w-12 rounded-xl object-cover ring-2 ring-slate-100 dark:ring-white/5 group-hover:ring-orange-500/50 transition-all shadow-md" alt="@item.FullName" />
+                                                <div class="absolute -bottom-1 -right-1 w-3.5 h-3.5 border-2 border-white dark:border-[#1e293b] rounded-full transition-all duration-300"
+                                                     style="@(item.IsActive ? "background-color: #10b981;" : "background-color: #ef4444;")">
+                                                    @if (!item.IsActive)
+                                                    {
+                                                        <div class="absolute inset-0 rounded-full bg-black/30"></div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="flex flex-col">
+                                                <span class="text-slate-700 dark:text-white font-bold group-hover:text-orange-500 transition-colors">@item.FullName</span>
+                                                <div class="flex items-center gap-1 text-[10px] text-slate-400 dark:text-gray-600 font-mono">
+                                                    <span class="material-icons-outlined text-[12px]">fingerprint</span>
+                                                    <span class="truncate w-32">@item.UserId</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-5 text-slate-500 dark:text-gray-400 text-sm font-medium">@item.Email</td>
+                                    <td class="px-8 py-5">
+                                        <div class="flex flex-wrap gap-1.5">
+                                            @if (!string.IsNullOrEmpty(item.RoleNames))
+                                            {
+                                                @foreach (var role in item.RoleNames.Split(','))
+                                                {
+                                                    <span class="px-2.5 py-1 bg-orange-500/10 border border-orange-500/20 text-orange-600 dark:text-orange-500 text-[9px] font-black uppercase rounded-lg tracking-wider">@role.Trim()</span>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span class="text-[10px] text-slate-300 dark:text-gray-700 font-bold italic">Tanımsız</span>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-5 text-right">
+                                        <div class="flex justify-end items-center gap-2">
+                                            <a asp-action="ManageRoles" asp-controller="AdminRole" asp-route-userId="@item.UserId" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 text-slate-400 dark:text-gray-400 hover:bg-orange-500/20 hover:text-orange-600 dark:hover:text-orange-500 transition-all hover:scale-110 active:scale-95" title="Roller">
+                                                <span class="material-icons-outlined text-lg">shield</span>
+                                            </a>
+                                            <a asp-action="EditUser" asp-route-id="@item.UserId" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 text-slate-400 dark:text-gray-400 hover:bg-indigo-500/20 hover:text-indigo-600 transition-all hover:scale-110 active:scale-95" title="@Localizer["Common.Edit"]">
+                                                <span class="material-icons-outlined text-lg">edit</span>
+                                            </a>
+                                            <a asp-action="DeleteUser" asp-route-id="@item.UserId" class="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 text-slate-400 dark:text-gray-400 hover:bg-red-500/20 hover:text-red-600 dark:hover:text-red-500 transition-all hover:scale-110 active:scale-95" title="@Localizer["Common.Delete"]">
+                                                <span class="material-icons-outlined text-lg">delete</span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="px-8 py-20 text-center">
+                                    <div class="flex flex-col items-center">
+                                        <span class="material-icons-outlined text-6xl text-slate-200 dark:text-gray-800 mb-4 animate-pulse">person_off</span>
+                                        <p class="text-slate-400 dark:text-gray-600 text-sm font-bold">@Localizer["Common.NoDataFound"]</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PAGINATION -->
+        @if (totalPages > 1)
+        {
+            <div class="flex justify-center mt-8">
+                <nav class="flex items-center gap-2">
+                    @if (currentPage > 1)
+                    {
+                        <a asp-action="UserList" asp-route-page="@(currentPage - 1)" asp-route-searchTerm="@currentSearch" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 text-slate-500 dark:text-gray-400 hover:bg-orange-500/10 hover:text-orange-500 hover:border-orange-500/30 transition-all shadow-sm">
+                            <span class="material-icons-outlined text-sm">chevron_left</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-100 dark:border-white/5 text-slate-300 dark:text-gray-600 cursor-not-allowed">
+                            <span class="material-icons-outlined text-sm">chevron_left</span>
+                        </span>
+                    }
+
+                    @for (int i = 1; i <= totalPages; i++)
+                    {
+                        if (i == currentPage)
+                        {
+                            <span class="w-10 h-10 flex items-center justify-center rounded-xl bg-orange-500 text-white font-bold shadow-lg shadow-orange-500/30 transition-all">@i</span>
+                        }
+                        else
+                        {
+                            <a asp-action="UserList" asp-route-page="@i" asp-route-searchTerm="@currentSearch" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 text-slate-600 dark:text-gray-300 hover:bg-orange-500/10 hover:text-orange-500 hover:border-orange-500/30 transition-all font-medium shadow-sm">@i</a>
+                        }
+                    }
+
+                    @if (currentPage < totalPages)
+                    {
+                        <a asp-action="UserList" asp-route-page="@(currentPage + 1)" asp-route-searchTerm="@currentSearch" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 text-slate-500 dark:text-gray-400 hover:bg-orange-500/10 hover:text-orange-500 hover:border-orange-500/30 transition-all shadow-sm">
+                            <span class="material-icons-outlined text-sm">chevron_right</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-100 dark:border-white/5 text-slate-300 dark:text-gray-600 cursor-not-allowed">
+                            <span class="material-icons-outlined text-sm">chevron_right</span>
+                        </span>
+                    }
+                </nav>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,372 @@
+﻿@model DashboardViewModel
+@using MovieMvcProject.Application.DTOs.Dashboard
+@using MovieMvcProject.Domain.Resources
+@using MovieMvcProject.Web.Areas.Admin.Models
+@using MovieMvcProject.Web.Areas.Admin.Resources
+@using System.Globalization
+@using Microsoft.Extensions.Localization
+
+@inject IStringLocalizer<AdminResource> AdminLocalizer
+@inject IStringLocalizer<EnumResource> EnumLocalizer
+
+@{
+    var rawGenres = Model.GenrePercentages ?? new List<GenrePercentageDto>();
+    var localizedGenreData = rawGenres.Select(g =>
+    {
+        var resourceKey = $"Category_{g.Name}";
+        return new
+        {
+            name = EnumLocalizer[resourceKey].Value ?? g.Name,
+            count = g.Count
+        };
+    }).ToList();
+}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<script>
+    // Global Variables
+    const appCulture = '@CultureInfo.CurrentCulture.Name';
+    const categoryNames = @Html.Raw(Json.Serialize(new { 
+        users = AdminLocalizer["Dashboard.Users"].Value, 
+        visitors = AdminLocalizer["Dashboard.Visitors"].Value 
+    }));
+    const loc = @Html.Raw(Json.Serialize(new { 
+        date = AdminLocalizer["Dashboard.Date"].Value, 
+        count = AdminLocalizer["Dashboard.Count"].Value, 
+        film = AdminLocalizer["Dashboard.Film"].Value, 
+        user = AdminLocalizer["Dashboard.User"].Value, 
+        ip = AdminLocalizer["Dashboard.IPAddress"].Value, 
+        device = AdminLocalizer["Dashboard.Device"].Value 
+    }));
+
+    let mainChart = null;
+    let currentDays = 7;
+    let currentCategory = 'users';
+    let currentChartData = { labels: [], values: [] };
+    let visitorDetailedData = [];
+    let chartType = 'line';
+    let isGridEnabled = false;
+    let isLabelsEnabled = false;
+
+    // Clock Functionality
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('clock-time').textContent = now.toLocaleTimeString(appCulture, { 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit' 
+        });
+        document.getElementById('clock-date').textContent = now.toLocaleDateString(appCulture, { 
+            weekday: 'long', 
+            month: 'long', 
+            day: 'numeric', 
+            year: 'numeric' 
+        });
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Chart UI Toggles
+    function setChartCategory(cat) {
+        currentCategory = cat;
+        const isUsers = cat === 'users';
+        document.getElementById('catUsers').className = isUsers 
+            ? "px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-white dark:bg-slate-700 shadow-sm text-neon-blue" 
+            : "px-3 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-500";
+        
+        document.getElementById('catVisitors').className = !isUsers 
+            ? "px-3 py-1.5 text-xs font-bold rounded-lg transition-all bg-white dark:bg-slate-700 shadow-sm text-neon-pink" 
+            : "px-3 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-500";
+        
+        document.getElementById('chartIcon').className = isUsers 
+            ? "w-2 h-6 bg-neon-blue rounded-full" 
+            : "w-2 h-6 bg-neon-pink rounded-full";
+        
+        updateMainChart();
+    }
+
+    function setChartDays(days) {
+        currentDays = days;
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (parseInt(btn.dataset.days) === days) btn.classList.add('active');
+        });
+        updateMainChart();
+    }
+
+    function toggleChartType() {
+        chartType = chartType === 'line' ? 'bar' : 'line';
+        updateMainChart();
+    }
+
+    function toggleGrid() {
+        isGridEnabled = !isGridEnabled;
+        if (mainChart) {
+            mainChart.options.scales.y.grid.display = isGridEnabled;
+            mainChart.options.scales.x.grid.display = isGridEnabled;
+            mainChart.update();
+        }
+    }
+
+    function toggleLabels() {
+        isLabelsEnabled = !isLabelsEnabled;
+        updateMainChart();
+    }
+
+    // Core Chart Logic
+    async function updateMainChart() {
+        const canvas = document.getElementById('mainActivityChart');
+        const ctx = canvas.getContext('2d');
+        const isDark = document.documentElement.classList.contains('dark');
+        const baseUrl = '@Url.Action("GetDailyTraffic", "Dashboard", new { area = "Admin" })';
+        const fetchUrl = `${baseUrl}?days=${currentDays}&type=${currentCategory}`;
+        
+        let labels = [], values = [];
+        try {
+            const response = await fetch(fetchUrl);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            labels = data.dates;
+            values = data.counts;
+        } catch (error) {
+            console.error("Grafik verisi çekilemedi:", error);
+            labels = Array(7).fill("—");
+            values = Array(7).fill(0);
+        }
+
+        currentChartData = { labels, values };
+        const themeColor = currentCategory === 'users' ? '#3b82f6' : '#ec4899';
+        const isLine = chartType === 'line';
+
+        if (mainChart) mainChart.destroy();
+
+        mainChart = new Chart(ctx, {
+            type: chartType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: categoryNames[currentCategory],
+                    data: values,
+                    borderColor: themeColor,
+                    borderWidth: isLine ? 4 : 0,
+                    pointBackgroundColor: themeColor,
+                    pointBorderColor: isDark ? '#1e293b' : '#ffffff',
+                    pointRadius: isLine ? 5 : 0,
+                    pointHoverRadius: 8,
+                    tension: isLine ? 0.4 : 0,
+                    fill: isLine,
+                    backgroundColor: isLine ? (context) => {
+                        const chart = context.chart;
+                        if (!chart.chartArea) return themeColor + '44';
+                        const gradient = chart.ctx.createLinearGradient(0, chart.chartArea.top, 0, chart.chartArea.bottom);
+                        gradient.addColorStop(0, themeColor + '88');
+                        gradient.addColorStop(1, themeColor + '00');
+                        return gradient;
+                    } : themeColor
+                }]
+            },
+            plugins: [ChartDataLabels],
+            options: {
+                locale: appCulture,
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { intersect: false, mode: 'index' },
+                scales: {
+                    y: { 
+                        beginAtZero: true, 
+                        grid: { 
+                            display: isGridEnabled, 
+                            color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', 
+                            drawBorder: false 
+                        }, 
+                        ticks: { color: '#94a3b8', font: { size: 11 }, precision: 0 } 
+                    },
+                    x: { 
+                        grid: { 
+                            display: isGridEnabled, 
+                            color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' 
+                        }, 
+                        ticks: { color: '#94a3b8', font: { size: 11 } } 
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    datalabels: { 
+                        display: isLabelsEnabled, 
+                        color: isDark ? '#fff' : '#333', 
+                        align: 'top', 
+                        anchor: 'end', 
+                        font: { weight: 'bold', size: 10 }, 
+                        offset: 4, 
+                        formatter: Math.round 
+                    },
+                    zoom: { 
+                        pan: { enabled: true, mode: 'x' }, 
+                        zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'x' } 
+                    },
+                    tooltip: {
+                        enabled: !isLabelsEnabled,
+                        callbacks: {
+                            title: function(items) {
+                                const label = items[0].label;
+                                const parts = label.split('.');
+                                if (parts.length === 3) {
+                                    const date = new Date(parts[2], parts[1] - 1, parts[0]);
+                                    return date.toLocaleDateString(appCulture, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                                }
+                                return label;
+                            },
+                            label: function(context) { 
+                                return categoryNames[currentCategory] + ": " + context.parsed.y; 
+                            }
+                        }
+                    }
+                },
+                animations: { y: { duration: 1000 } }
+            }
+        });
+    }
+
+    // Modal & Reporting
+    async function openReportModal() {
+        const modal = document.getElementById('reportModal');
+        const tableHead = document.getElementById('reportTableHead');
+        const tableBody = document.getElementById('reportTableBody');
+        const title = document.getElementById('reportType');
+        
+        title.textContent = categoryNames[currentCategory];
+        tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-slate-500">Veriler yükleniyor...</td></tr>';
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        document.body.classList.add('modal-active');
+
+        if (currentCategory === 'visitors') {
+            const reportUrl = `@Url.Action("GetVisitorReportData", "Dashboard", new { area = "Admin" })?days=${currentDays}`;
+            try {
+                const response = await fetch(reportUrl);
+                const data = await response.json();
+                visitorDetailedData = data;
+                
+                tableHead.innerHTML = `<tr><th class="px-6 py-3">${loc.date}</th><th class="px-6 py-3">${loc.film}</th><th class="px-6 py-3">${loc.user}</th><th class="px-6 py-3">${loc.ip}</th><th class="px-6 py-3">${loc.device}</th></tr>`;
+                tableBody.innerHTML = "";
+                
+                if (data && data.length > 0) {
+                    data.forEach(v => {
+                        tableBody.innerHTML += `
+                            <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors text-xs">
+                                <td class="px-6 py-3 font-mono text-slate-500 whitespace-nowrap">${new Date(v.visitedAt).toLocaleString(appCulture)}</td>
+                                <td class="px-6 py-3 font-bold dark:text-white">${v.movieTitle || '-'}</td>
+                                <td class="px-6 py-3 text-slate-500">${v.userId || 'Ziyaretçi'}</td>
+                                <td class="px-6 py-3 font-mono text-slate-500">${v.ipAddress || '-'}</td>
+                                <td class="px-6 py-3 text-slate-500 truncate max-w-[150px]" title="${v.userAgent}">${v.userAgent || '-'}</td>
+                            </tr>`;
+                    });
+                } else {
+                    tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-slate-400">Veri bulunamadı</td></tr>`;
+                }
+            } catch (error) {
+                console.error("Rapor hatası:", error);
+                tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-red-500">Hata oluştu!</td></tr>`;
+            }
+        } else {
+            tableHead.innerHTML = `<tr><th class="px-6 py-3">${loc.date}</th><th class="px-6 py-3 text-right">${loc.count}</th></tr>`;
+            tableBody.innerHTML = "";
+            
+            if (currentChartData.labels && currentChartData.labels.length > 0 && currentChartData.labels[0] !== "—") {
+                for (let i = 0; i < currentChartData.labels.length; i++) {
+                    tableBody.innerHTML += `
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                            <td class="px-6 py-3 font-mono text-xs text-slate-600 dark:text-slate-400">${currentChartData.labels[i]}</td>
+                            <td class="px-6 py-3 text-right font-bold dark:text-white">${currentChartData.values[i]}</td>
+                        </tr>`;
+                }
+            } else {
+                tableBody.innerHTML = `<tr><td colspan="2" class="text-center py-4 text-slate-400">Veri bulunamadı</td></tr>`;
+            }
+        }
+    }
+
+    function closeReportModal() {
+        const modal = document.getElementById('reportModal');
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        document.body.classList.remove('modal-active');
+    }
+
+    function downloadExcel() {
+        let ws_data = [];
+        if (currentCategory === 'visitors') {
+            if (!visitorDetailedData.length) { alert("İndirilecek veri yok!"); return; }
+            ws_data.push(['Ziyaret Tarihi', 'Film Adı', 'Kullanıcı', 'IP Adresi', 'Tarayıcı Bilgisi']);
+            visitorDetailedData.forEach(v => ws_data.push([
+                new Date(v.visitedAt).toLocaleString(), 
+                v.movieTitle || '-', 
+                v.userId || 'Ziyaretçi', 
+                v.ipAddress || '-', 
+                v.userAgent || '-'
+            ]));
+        } else {
+            if (!currentChartData.labels.length || currentChartData.labels[0] === "—") { alert("İndirilecek veri yok!"); return; }
+            ws_data.push(['Tarih', 'Adet']);
+            for (let i = 0; i < currentChartData.labels.length; i++) {
+                ws_data.push([currentChartData.labels[i], currentChartData.values[i]]);
+            }
+        }
+        const ws = XLSX.utils.aoa_to_sheet(ws_data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Report");
+        XLSX.writeFile(wb, `Report_${currentCategory}_${new Date().toISOString().slice(0,10)}.xlsx`);
+    }
+
+    // Genre Chart Logic
+    function loadGenreChart() {
+        const gData = @Html.Raw(Json.Serialize(localizedGenreData));
+        const ctx = document.getElementById('genreChart').getContext('2d');
+        const isDark = document.documentElement.classList.contains('dark');
+        
+        if (!gData || gData.length === 0) return;
+        
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: gData.map(x => x.name),
+                datasets: [{ 
+                    data: gData.map(x => x.count), 
+                    backgroundColor: ['#ec4899', '#3b82f6', '#a855f7', '#06b6d4', '#10b981', '#f59e0b', '#6366f1'], 
+                    borderWidth: 0, 
+                    hoverOffset: 10 
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: { 
+                        position: 'bottom', 
+                        labels: { 
+                            color: isDark ? '#cbd5e1' : '#475569', 
+                            padding: 20, 
+                            usePointStyle: true 
+                        } 
+                    },
+                    datalabels: { display: false }
+                }
+            }
+        });
+    }
+
+    // Event Listeners
+    document.onkeydown = function(evt) {
+        if (evt.key === "Escape" && document.body.classList.contains('modal-active')) {
+            closeReportModal();
+        }
+    };
+
+    window.addEventListener('load', () => {
+        updateMainChart();
+        loadGenreChart();
+    });
+</script>

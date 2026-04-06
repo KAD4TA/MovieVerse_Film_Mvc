@@ -1,0 +1,53 @@
+﻿/* İkonlu inputlar için özel padding */
+.input-with-icon {
+    position: relative;
+}
+
+    .input-with-icon input {
+        padding-left: 54px !important;
+    }
+
+.input-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    font-size: 24px;
+    pointer-events: none;
+    transition: color 0.2s;
+}
+
+/* Şifre gizle/göster wrapper */
+.password-wrapper {
+    position: relative;
+}
+
+    .password-wrapper input {
+        padding-right: 54px !important;
+    }
+
+.toggle-password {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    font-size: 24px;
+    transition: all 0.2s ease;
+    padding: 4px;
+    border-radius: 9999px;
+}
+
+    .toggle-password:hover {
+        color: #f3f4f6;
+        background: rgba(255,255,255,0.1);
+    }
+
+/* Material Icons Ayarı */
+.material-symbols-outlined, .material-icons {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}

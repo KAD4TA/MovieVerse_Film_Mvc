@@ -1,0 +1,47 @@
+﻿@using Microsoft.Extensions.Localization
+@model MovieMvcProject.Web.Models.MovieDetailViewModel
+@inject IStringLocalizer<MovieMvcProject.Domain.Resources.MovieResource> MovieLocalizer
+
+<div id="replyModal" class="custom-modal-overlay">
+    <div class="modal-content-box glass-card p-8 rounded-[2rem] border border-white/10 relative">
+        <button onclick="closeReplyModal()" class="absolute top-5 right-5 text-gray-500 hover:text-white transition"><span class="material-symbols-outlined">close</span></button>
+        <h3 class="text-2xl font-black italic mb-2 text-blue-400">@MovieLocalizer["ReplyTitle"].Value</h3>
+        <p class="text-gray-400 text-sm mb-6"><span id="replyingToUser" class="text-blue-400 font-bold"></span> @MovieLocalizer["ReplyingToText"].Value</p>
+        <form id="replyForm">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="MovieId" value="@Model?.MovieDetail.MovieId" />
+            <input type="hidden" name="ParentId" id="replyParentId" value="" />
+            <textarea name="Content" rows="4" required class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white focus:border-blue-500 outline-none transition-all resize-none mb-6"></textarea>
+            <div class="flex gap-3">
+                <button type="button" onclick="closeReplyModal()" class="flex-1 py-4 rounded-xl bg-white/5 font-bold">@MovieLocalizer["CancelButton"].Value</button>
+                <button type="submit" class="flex-[2] bg-blue-600 text-white font-black py-4 rounded-xl shadow-lg">@MovieLocalizer["SendButton"].Value</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="editModal" class="custom-modal-overlay">
+    <div id="editModalContainer" class="modal-content-box glass-card p-8 rounded-[2rem] border border-white/10 relative"></div>
+</div>
+
+<div id="trailerModal" class="fixed inset-0 z-[3000] bg-black/95 backdrop-blur-xl hidden items-center justify-center p-4">
+    <button onclick="closeTrailer()" class="absolute top-8 right-8 text-white/50 hover:text-white transition"><span class="material-symbols-outlined text-5xl">close</span></button>
+    <div class="w-full max-w-6xl aspect-video rounded-3xl overflow-hidden border border-white/10">
+        <iframe id="trailerFrame" class="w-full h-full" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+</div>
+
+<div id="deleteConfirmModal" class="custom-modal-overlay">
+    <div class="modal-content-box glass-card p-8 rounded-[2rem] border border-red-500/30 relative text-center">
+        <div class="w-20 h-20 mx-auto bg-red-500/10 rounded-full flex items-center justify-center mb-6">
+            <span class="material-symbols-outlined text-5xl text-red-500">warning</span>
+        </div>
+        <h3 class="text-2xl font-black italic mb-2 text-white">@MovieLocalizer["DeleteCommentTitle"].Value</h3>
+        <p class="text-gray-400 text-sm mb-8">@MovieLocalizer["DeleteConfirmText"].Value</p>
+        <input type="hidden" id="deleteCommentId" value="" />
+        <div class="flex gap-3">
+            <button type="button" onclick="closeDeleteModal()" class="flex-1 py-4 rounded-xl bg-white/5 hover:bg-white/10 text-white font-bold transition">@MovieLocalizer["CancelButton"].Value</button>
+            <button type="button" onclick="confirmDeleteComment()" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-black py-4 rounded-xl shadow-lg transition">@MovieLocalizer["YesDeleteButton"].Value</button>
+        </div>
+    </div>
+</div>

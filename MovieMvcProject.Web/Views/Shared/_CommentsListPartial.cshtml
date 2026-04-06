@@ -1,0 +1,50 @@
+﻿@using Microsoft.Extensions.Localization
+@using MovieMvcProject.Domain.Resources
+@using MovieMvcProject.Domain.Enums
+@model MovieMvcProject.Application.Commons.PagedResult<MovieMvcProject.Application.DTOs.ResponseDto.CommentDtoResponse>
+@inject IStringLocalizer<CommentResource> Localizer
+
+@{
+    var approvedCount = Model.Items.Count(x => x.Status == CommentStatus.Approved);
+}
+
+@if (Model?.Items != null && Model.Items.Any())
+{
+    <div class="flex items-center mb-8">
+        <div class="bg-emerald-500/10 border border-emerald-500/20 px-4 py-1.5 rounded-full flex items-center gap-2">
+            <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+            <span class="text-emerald-400 font-black text-sm uppercase tracking-tighter">
+                @Localizer["ApprovedComments", approvedCount]
+            </span>
+        </div>
+    </div>
+}
+
+@if (Model?.Items == null || !Model.Items.Any())
+{
+    <div class="text-center py-10 bg-white/5 rounded-3xl border border-dashed border-white/10">
+        <p class="text-gray-400">@Localizer["NoCommentsYet"]</p>
+    </div>
+}
+else
+{
+    <div class="space-y-4">
+        @foreach (var comment in Model.Items.Where(x => x.ParentId == null))
+        {
+            <partial name="_CommentItem" model="comment" />
+        }
+    </div>
+
+    @if (Model.TotalPages > 1)
+    {
+        <div class="flex justify-center gap-2 mt-8">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <button onclick="loadComments(@i)"
+                        class="px-4 py-2 rounded-lg @(i == Model.PageNumber ? "bg-blue-600" : "bg-white/10")">
+                    @i
+                </button>
+            }
+        </div>
+    }
+}

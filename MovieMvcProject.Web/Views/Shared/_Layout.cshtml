@@ -1,0 +1,317 @@
+﻿@using System.Globalization
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.Extensions.Localization
+@using MovieMvcProject.Domain.Resources
+@using MovieMvcProject.Domain.Identity
+@using Microsoft.AspNetCore.Identity
+@inject IStringLocalizer<MenuResource> MenuLocalizer
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    string cultureName = requestCulture?.RequestCulture.Culture.Name ?? "tr-TR";
+    string langCode = cultureName.Split('-')[0];
+    string returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}{Context.Request.QueryString.Value}";
+
+    AppUser? currentUser = null;
+    string userName = MenuLocalizer["Profile"].Value;
+    string profileImage = "/profile-images/default-profile.png";
+    string displayRole = "GUEST";
+
+    bool isAuthenticated = SignInManager.IsSignedIn(User);
+    if (isAuthenticated)
+    {
+        currentUser = await UserManager.GetUserAsync(User);
+        if (currentUser != null)
+        {
+            userName = currentUser.FullName ?? MenuLocalizer["Profile"].Value;
+            profileImage = !string.IsNullOrEmpty(currentUser.ProfileImageUrl) ? currentUser.ProfileImageUrl : profileImage;
+            
+            var roles = await UserManager.GetRolesAsync(currentUser);
+            displayRole = roles.FirstOrDefault(r => r.ToLower() != "user") ?? roles.FirstOrDefault() ?? "USER";
+        }
+    }
+}
+
+<!DOCTYPE html>
+<html class="dark" lang="@langCode">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>@(ViewData["Title"] ?? MenuLocalizer["Home"]) - MovieVerse</title>
+
+    @* Frameworks & Fonts *@
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#ea2a33",
+                        "background-dark": "#0a0a0a",
+                        "card-dark": "#161616"
+                    },
+                    fontFamily: { display: "Be Vietnam Pro" }
+                }
+            }
+        };
+    </script>
+
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        
+        /* Jquery UI Autocomplete Styles */
+        .ui-autocomplete {
+            background-color: #1a1a1a !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 12px !important;
+            z-index: 10000 !important;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.5);
+            padding: 8px !important;
+        }
+
+        .ui-menu-item-wrapper {
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            padding: 10px !important;
+            color: #ccc !important;
+            border: none !important;
+            cursor: pointer;
+        }
+
+        .ui-state-active {
+            background: rgba(234, 42, 51, 0.2) !important;
+            color: #ea2a33 !important;
+            border-radius: 8px;
+        }
+
+        .search-poster { width: 35px; height: 50px; border-radius: 4px; object-fit: cover; }
+        
+        /* Dropdown Control */
+        .dropdown-menu {
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            visibility: hidden;
+        }
+
+        .dropdown-menu.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+            visibility: visible;
+        }
+
+        #global-loader {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            z-index: 99999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader-reel {
+            width: 80px; height: 80px;
+            border: 4px solid #222;
+            border-top: 4px solid #ea2a33;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .ai-glow { animation: aiPulse 2s infinite; }
+        @@keyframes aiPulse {
+            0%, 100% { box-shadow: 0 0 5px rgba(234,42,51,0.2); }
+            50% { box-shadow: 0 0 15px rgba(234,42,51,0.5); }
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ea2a33; }
+    </style>
+    @RenderSection("Styles", required: false)
+</head>
+
+<body class="bg-background-dark font-display text-white flex flex-col min-h-screen selection:bg-primary/30">
+    
+    <div id="global-loader">
+        <div class="loader-reel"></div>
+        <h2 class="mt-6 text-primary font-black tracking-widest uppercase text-xs animate-pulse">@MenuLocalizer["PleaseWait"]</h2>
+    </div>
+
+    <header class="sticky top-0 z-50 bg-background-dark/80 backdrop-blur-xl border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between gap-8">
+            
+            <div class="flex items-center gap-10">
+                <a asp-controller="Movie" asp-action="Index" class="flex items-center gap-2.5 group">
+                    <span class="material-symbols-outlined !text-4xl text-primary group-hover:rotate-12 transition-transform">movie</span>
+                    <h2 class="text-2xl font-black tracking-tighter uppercase">
+                        MOVIE<span class="text-primary">VERSE</span>
+                    </h2>
+                </a>
+                <nav class="hidden xl:flex items-center gap-8 text-[13px] font-bold uppercase tracking-wider text-gray-400">
+                    <a asp-controller="Movie" asp-action="Index" class="hover:text-white transition-colors">@MenuLocalizer["Movies"]</a>
+                    <a asp-controller="Movie" asp-action="ExploreCategory" class="hover:text-white transition-colors">@MenuLocalizer["Categories"]</a>
+                    <a asp-controller="AIAssistant" asp-action="Suggest" class="ai-glow px-4 py-2 bg-primary/10 border border-primary/20 rounded-full text-primary hover:bg-primary hover:text-white transition-all">
+                        @MenuLocalizer["AISuggestions"]
+                    </a>
+                </nav>
+            </div>
+
+            <div class="hidden md:block flex-1 max-w-md relative">
+                <form asp-controller="Movie" asp-action="Index" method="get" class="relative group loader-trigger">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 !text-xl group-focus-within:text-primary transition-colors">search</span>
+                    <input type="text" id="headerSearchInput" name="searchTerm" autocomplete="off"
+                           class="w-full bg-white/5 border border-white/10 rounded-2xl py-3 pl-12 pr-4 focus:ring-1 focus:ring-primary focus:border-primary/50 transition-all text-sm outline-none"
+                           placeholder="@MenuLocalizer["HeaderSearchPlaceholder"]" />
+                </form>
+            </div>
+
+            <div class="flex items-center gap-6">
+                @* Language Switcher *@
+                <div class="hidden lg:flex items-center gap-2 bg-white/5 p-1 rounded-xl border border-white/5">
+                    <form asp-controller="Language" asp-action="SetLanguage" method="post" class="flex gap-1">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="returnUrl" value="@returnUrl" />
+                        <button type="submit" name="culture" value="tr-TR" class="w-8 h-8 rounded-lg overflow-hidden @(cultureName.StartsWith("tr") ? "ring-2 ring-primary" : "opacity-30 grayscale hover:opacity-100")">
+                            <img src="https://flagcdn.com/w80/tr.png" class="w-full h-full object-cover">
+                        </button>
+                        <button type="submit" name="culture" value="en-US" class="w-8 h-8 rounded-lg overflow-hidden @(cultureName.StartsWith("en") ? "ring-2 ring-primary" : "opacity-30 grayscale hover:opacity-100")">
+                            <img src="https://flagcdn.com/w80/us.png" class="w-full h-full object-cover">
+                        </button>
+                    </form>
+                </div>
+
+                @if (isAuthenticated)
+                {
+                    <div class="relative">
+                        <button id="profileDropdownBtn" class="flex items-center gap-3 p-1.5 pr-4 rounded-2xl hover:bg-white/5 transition-all border border-transparent hover:border-white/10">
+                            <img src="@profileImage" class="w-9 h-9 rounded-xl object-cover shadow-2xl border border-white/10">
+                            <div class="hidden md:block text-left">
+                                <p class="text-xs font-black text-white leading-none">@userName</p>
+                                <p class="text-[10px] text-gray-500 mt-1 uppercase tracking-widest font-bold">@displayRole</p>
+                            </div>
+                            <span class="material-symbols-outlined text-gray-600 !text-lg">keyboard_arrow_down</span>
+                        </button>
+                        
+                        <div id="profileDropdownMenu" class="dropdown-menu absolute top-full right-0 mt-4 w-64 bg-[#121212] border border-white/10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-3 z-[100]">
+                            <div class="px-4 py-3 border-b border-white/5 mb-2">
+                                <p class="text-[10px] text-gray-500 uppercase font-black tracking-[0.2em]">@MenuLocalizer["AccountManagement"]</p>
+                            </div>
+                            <a asp-controller="Account" asp-action="Settings" class="flex items-center gap-4 p-3.5 hover:bg-white/5 rounded-2xl text-sm font-bold text-gray-300 hover:text-white transition-all group">
+                                <span class="material-symbols-outlined text-gray-500 group-hover:text-primary">manage_accounts</span>
+                                @MenuLocalizer["Settings"]
+                            </a>
+                            <a asp-controller="Wishlist" asp-action="Index" class="flex items-center gap-4 p-3.5 hover:bg-white/5 rounded-2xl text-sm font-bold text-gray-300 hover:text-white transition-all group">
+                                <span class="material-symbols-outlined text-gray-500 group-hover:text-primary">favorite</span>
+                                @MenuLocalizer["MyList"]
+                            </a>
+                            <div class="h-px bg-white/5 my-2 mx-2"></div>
+                            <form asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Movie", new { area = "" })" method="post">
+                                <button type="submit" class="w-full flex items-center gap-4 p-3.5 text-red-500 hover:bg-red-500/10 rounded-2xl text-sm font-black transition-all group">
+                                    <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">logout</span>
+                                    @MenuLocalizer["Logout"]
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <a asp-area="Identity" asp-page="/Account/Login" class="bg-primary px-8 py-3 rounded-2xl text-sm font-black uppercase tracking-tighter hover:brightness-125 transition-all shadow-xl shadow-primary/10">
+                        @MenuLocalizer["Login"]
+                    </a>
+                }
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 relative">
+        @RenderBody()
+    </main>
+
+    <footer class="bg-black border-t border-white/5 pt-24 pb-12">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-[11px] font-black text-gray-700 uppercase tracking-[0.4em]">
+                    @MenuLocalizer["CopyrightFooter", DateTime.Now.Year]
+                </p>
+            </div>
+        </div>
+    </footer>
+
+   
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Loader
+            const showLoader = () => $("#global-loader").css("display", "flex").hide().fadeIn(300);
+            const hideLoader = () => $("#global-loader").fadeOut(300);
+            $('form.loader-trigger').on('submit', function() { showLoader(); });
+
+            // Autocomplete (Arama)
+            $("#headerSearchInput").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "@Url.Action("SearchSuggestions", "Movie")",
+                        data: { term: request.term },
+                        success: (data) => response(data),
+                        error: () => console.log("Arama hatası!")
+                    });
+                },
+                minLength: 2,
+                select: (event, ui) => { 
+                    if (ui.item.url) { 
+                        showLoader(); 
+                        window.location.href = ui.item.url; 
+                    } 
+                }
+            }).autocomplete("instance")._renderItem = function(ul, item) {
+                return $("<li>").append(`
+                    <div class="ui-menu-item-wrapper">
+                        <img src="${item.poster || '/images/no-poster.jpg'}" class="search-poster" />
+                        <div class="flex flex-col">
+                            <span class="font-bold text-white text-xs">${item.label}</span>
+                            <span class="text-[10px] text-gray-500">${item.value}</span>
+                        </div>
+                    </div>
+                `).appendTo(ul);
+            };
+
+            // Dropdown (Profil Menüsü)
+            $("#profileDropdownBtn").on("click", function(e) {
+                e.stopPropagation();
+                $("#profileDropdownMenu").toggleClass("visible");
+            });
+
+            $(document).on("click", function(e) {
+                if (!$(e.target).closest("#profileDropdownBtn").length) {
+                    $("#profileDropdownMenu").removeClass("visible");
+                }
+            });
+
+            window.triggerLoader = showLoader;
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

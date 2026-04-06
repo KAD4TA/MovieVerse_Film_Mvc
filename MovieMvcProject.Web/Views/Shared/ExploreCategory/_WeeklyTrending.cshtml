@@ -1,0 +1,56 @@
+﻿@using Microsoft.Extensions.Localization
+@using MovieMvcProject.Application.DTOs.ResponseDto
+@using MovieMvcProject.Domain.Resources
+@inject IStringLocalizer<MovieResource> MovieLocalizer
+@inject IStringLocalizer<EnumResource> EnumLocalizer
+
+@{
+    var trendingMovies = ViewBag.WeeklyTrending as List<TrendingMovieDtoResponse>;
+}
+
+@if (trendingMovies != null && trendingMovies.Any())
+{
+    <section class="max-w-7xl mx-auto">
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-3">
+                <span class="w-2 h-8 bg-red-600 rounded-full"></span>
+                <h2 class="text-2xl font-bold uppercase">@MovieLocalizer["WeeklyTrending"]</h2>
+            </div>
+            
+            <div class="flex gap-2">
+                <button id="slidePrev" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <button id="slideNext" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="trendingList" class="flex overflow-x-auto gap-6 pb-8 snap-x scroll-smooth">
+            @foreach (var movie in trendingMovies)
+            {
+                <div class="min-w-[220px] md:min-w-[260px] snap-start movie-card group cursor-pointer clickable-card"
+                     data-url="@Url.Action("MovieDetail", "Movie", new { id = movie.MovieId })">
+                    
+                    <div class="movie-poster-container relative aspect-[2/3] mb-4">
+                        <img src="@movie.PosterUrl" alt="@movie.Title" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                        
+                        <div class="absolute top-3 left-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded-md text-[10px] font-bold text-white flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[14px] text-red-500 fill-1">visibility</span>
+                            @movie.WeeklyViewCount
+                        </div>
+                    </div>
+                    
+                    <div class="px-1">
+                        <h4 class="font-bold text-lg text-white/90 group-hover:text-blue-400 truncate">@movie.Title</h4>
+                        <div class="flex items-center justify-between mt-2">
+                            <span class="text-xs text-gray-500">@movie.Year</span>
+                            <span class="text-yellow-400 font-bold text-sm">★ @movie.Rating.ToString("F1")</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+}

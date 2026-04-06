@@ -1,0 +1,19 @@
+﻿@model MovieMvcProject.Application.DTOs.ResponseDto.ActorDetailDto
+
+@{
+    ViewData["Title"] = Model.Name;
+    Layout = "_Layout";
+}
+
+@section Styles {
+    @* Dış CSS dosyamızı ekliyoruz *@
+    <link rel="stylesheet" href="~/css/actor/actor-details.css" asp-append-version="true" />
+}
+
+@* Partial View'i çağırıyoruz *@
+<partial name="Actor/_ActorDetailsPartial" model="Model" />
+
+@section Scripts {
+    @* Dış JS dosyamızı ekliyoruz *@
+    <script src="~/js/actor/actor-details.js" asp-append-version="true"></script>
+}

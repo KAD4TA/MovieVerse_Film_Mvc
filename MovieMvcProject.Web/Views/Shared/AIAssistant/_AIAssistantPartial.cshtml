@@ -1,0 +1,91 @@
+﻿@using MovieMvcProject.Domain.Resources
+@using Microsoft.Extensions.Localization
+@using System.Text.Json
+@inject IStringLocalizer<AIResource> AIResourceLocalizer
+
+
+<script>
+    window.aiConfig = {
+        urls: {
+            getSuggestions: '@Url.Action("GetSuggestions", "AIAssistant")'
+        },
+        localizer: {
+            analyzing: @Html.Raw(JsonSerializer.Serialize(AIResourceLocalizer["Analyzing"].Value)),
+            analysisComplete: @Html.Raw(JsonSerializer.Serialize(AIResourceLocalizer["AnalysisComplete"].Value)),
+            noMoviesFoundAI: @Html.Raw(JsonSerializer.Serialize(AIResourceLocalizer["NoMoviesFoundAI"].Value)),
+            rateLimitWarning: @Html.Raw(JsonSerializer.Serialize(AIResourceLocalizer["RateLimitWarning"].Value)),
+            rateLimitAIResponse: @Html.Raw(JsonSerializer.Serialize(AIResourceLocalizer["RateLimitAIResponse"].Value)),
+            connectionError: @Html.Raw(JsonSerializer.Serialize(AIResourceLocalizer["ConnectionError"].Value)),
+            inspectButton: @Html.Raw(JsonSerializer.Serialize(AIResourceLocalizer["InspectButton"].Value))
+        }
+    };
+</script>
+
+<div class="flex-grow flex flex-col items-center justify-center pt-28 pb-12 px-4 relative z-0">
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none z-[-1]"></div>
+    
+    <div class="w-full max-w-4xl flex flex-col items-center gap-8 fade-in-up">
+        <div class="text-center flex flex-col gap-4 mb-4">
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight">
+                @Html.Raw(string.Format(AIResourceLocalizer["HeroTitle"].Value, "<span class=\"text-primary\">", "</span>"))
+            </h2>
+            <p class="text-gray-400 text-lg font-normal max-w-xl mx-auto">
+                @AIResourceLocalizer["HeroSubtitle"].Value
+            </p>
+        </div>
+
+        <div class="w-full relative group z-20">
+            <div class="relative w-full z-30">
+                <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                    <span id="aiIcon" class="material-symbols-outlined text-primary text-2xl">auto_awesome</span>
+                </div>
+                <input id="aiSearchInput"
+                       class="block w-full h-16 pl-14 pr-32 bg-[#1a0b0c] border-2 border-[#472426] text-white rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary placeholder-gray-500 text-lg transition-all shadow-xl outline-none"
+                       placeholder="@AIResourceLocalizer["AISearchPlaceholder"].Value"
+                       type="text" />
+                <div class="absolute inset-y-0 right-2 flex items-center">
+                    <button id="btnAskAI" class="h-12 px-6 bg-primary hover:bg-red-700 text-white rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-lg shadow-primary/20">
+                        <span>@AIResourceLocalizer["AskButton"].Value</span>
+                        <span class="material-symbols-outlined text-lg">arrow_upward</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="aiDropdown" class="absolute top-full left-0 right-0 mt-3 bg-[#1a0b0c] border border-[#472426] rounded-2xl shadow-2xl overflow-hidden z-20 p-2 md:p-4 hidden translate-y-4 opacity-0 transition-all duration-300 flex-col">
+                <div class="flex items-start gap-4 p-2 mb-4">
+                    <div class="size-10 rounded-full bg-gradient-to-br from-primary to-[#800000] flex items-center justify-center shrink-0 shadow-inner">
+                        <span class="material-symbols-outlined text-white text-xl">smart_toy</span>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-white font-bold text-sm">@AIResourceLocalizer["AIMovieVerse"].Value</span>
+                            <span class="text-gray-500 text-xs">@AIResourceLocalizer["Now"].Value</span>
+                        </div>
+                        <p id="aiResponseText" class="text-gray-200 text-sm md:text-base leading-relaxed bg-black/50 p-3 rounded-lg rounded-tl-none border border-white/5">
+                            @AIResourceLocalizer["Analyzing"].Value
+                        </p>
+                    </div>
+                </div>
+
+                <div class="relative group/slider w-full">
+                    <button id="scrollLeft" class="absolute left-0 top-1/2 -translate-y-1/2 z-40 bg-black/70 hover:bg-primary text-white p-2 rounded-full border border-white/10 opacity-0 group-hover/slider:opacity-100 transition-opacity hidden md:flex">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </button>
+                    <div id="movieResultsWrapper" class="w-full overflow-x-auto no-scrollbar scroll-smooth pb-2">
+                        <div id="movieResultsContainer" class="flex gap-4 min-w-max px-2"></div>
+                    </div>
+                    <button id="scrollRight" class="absolute right-0 top-1/2 -translate-y-1/2 z-40 bg-black/70 hover:bg-primary text-white p-2 rounded-full border border-white/10 opacity-0 group-hover/slider:opacity-100 transition-opacity hidden md:flex">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="suggestionSection" class="w-full flex flex-wrap justify-center gap-3 mt-4">
+            <button class="suggestion-chip" data-query="Christopher Nolan'ın en yüksek puanlı filmleri">@AIResourceLocalizer["SuggestionNolan"].Value</button>
+            <button class="suggestion-chip" data-query="90'ların unutulmaz korku filmleri">@AIResourceLocalizer["Suggestion90sHorror"].Value</button>
+            <button class="suggestion-chip" data-query="Oscar kazanmış dramatik yapımlar">@AIResourceLocalizer["SuggestionOscarDrama"].Value</button>
+            <button class="suggestion-chip" data-query="Interstellar benzeri uzay filmleri">@AIResourceLocalizer["SuggestionSpace"].Value</button>
+        </div>
+    </div>
+</div>

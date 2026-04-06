@@ -1,0 +1,28 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<MovieMvcProject.Domain.Resources.ExceptionResource> L
+@{
+    Layout = "_ErrorLayout";
+    var title = ViewBag.Title as string ?? L["BadRequest"].Value;
+    var statusCode = ViewBag.StatusCode as int? ?? 400;
+    
+    ViewData["Title"] = title;
+}
+
+<div class="relative">
+
+    <div class="flex items-center justify-center text-primary drop-shadow-[0_0_15px_rgba(234,42,51,0.6)] mb-6">
+        <span class="material-symbols-outlined !text-9xl text-primary/80">link_off</span>
+    </div>
+
+    <div class="flex flex-col gap-4">
+        @* Durum Kodu *@
+        <h1 class="text-8xl font-black text-white leading-none tracking-tighter drop-shadow-2xl">
+            @statusCode
+        </h1>
+        
+        @* Başlık *@
+        <h2 class="text-3xl font-bold text-white uppercase tracking-tight">
+            @title
+        </h2>
+    </div>
+</div>

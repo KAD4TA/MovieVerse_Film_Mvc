@@ -1,0 +1,70 @@
+﻿@model MovieMvcProject.Web.Models.EmailViewModel
+@using MovieMvcProject.Application.Interfaces.ILocalization
+@using System.Globalization
+@inject ILocalizationService LocalizationService
+
+@{
+    var returnUrl = ViewContext.HttpContext.Request.Path + ViewContext.HttpContext.Request.QueryString;
+    var cultureName = CultureInfo.CurrentCulture.Name ?? "tr-TR";
+}
+
+<div class="relative min-h-screen landing-wrapper">
+    <div class="absolute inset-0 bg-white z-0">
+        <div class="absolute inset-0 bg-black/80 landing-overlay"></div>
+    </div>
+
+    <div class="relative z-10 flex flex-col min-h-screen">
+        <header class="py-5 px-4 sm:px-8 md:px-12">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <h1 class="text-3xl md:text-4xl font-bold tracking-wider text-[var(--homas-red)]">MovieVerse</h1>
+                <div class="flex items-center space-x-4">
+                    <div class="relative language-select-wrapper">
+                        <span class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-[var(--background-light)] text-lg pointer-events-none">language</span>
+                        <form action="/Language/SetLanguage" method="post" class="inline-block">
+                            <input type="hidden" name="returnUrl" value="@returnUrl" />
+                            @Html.AntiForgeryToken()
+                            <select id="cultureSelect" name="culture" class="bg-black/50 border border-gray-600 text-[var(--background-light)] rounded py-1 pl-8 pr-8 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400">
+                                <option value="tr-TR" selected="@(cultureName == "tr-TR")">@LocalizationService.GetLocalizedHtmlString("MenuResource", "Turkish")</option>
+                                <option value="en-US" selected="@(cultureName == "en-US")">@LocalizationService.GetLocalizedHtmlString("MenuResource", "English")</option>
+                            </select>
+                        </form>
+                        <span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-[var(--background-light)] text-base pointer-events-none">arrow_drop_down</span>
+                    </div>
+                    <a class="bg-[var(--homas-red)] text-[var(--background-light)] font-medium px-4 py-1.5 rounded text-sm hover:bg-red-700 transition-colors"
+                           asp-controller="Account" asp-action="Login">
+                        @LocalizationService.GetLocalizedHtmlString("MenuResource", "Login")
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow flex items-center justify-center">
+            <div class="text-center text-[var(--background-light)] max-w-4xl mx-auto px-4 py-20">
+                <h2 class="text-4xl sm:text-5xl md:text-6xl font-black mb-4 leading-tight">
+                    @LocalizationService.GetLocalizedHtmlString("MenuResource", "HeroTitle")
+                </h2>
+                <p class="text-xl sm:text-2xl mb-8">@LocalizationService.GetLocalizedHtmlString("MenuResource", "HeroSubtitle")</p>
+                <p class="text-lg sm:text-xl mb-6">@LocalizationService.GetLocalizedHtmlString("MenuResource", "HeroDescription")</p>
+
+                <form class="max-w-xl mx-auto" asp-controller="Home" asp-action="Index" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="flex flex-col sm:flex-row gap-3 w-full">
+                        <div class="flex-1 relative">
+                            <input asp-for="Email"
+                                   class="w-full h-14 sm:h-16 text-base px-5 py-3 bg-black/50 border border-gray-500 text-[var(--background-light)] rounded focus:outline-none focus:ring-2 focus:ring-[var(--homas-orange)] placeholder-gray-400"
+                                   placeholder="@LocalizationService.GetLocalizedHtmlString("RegisterResource", "EmailPlaceholder")"
+                                   type="email" />
+                            <span asp-validation-for="Email" class="text-red-500 text-sm mt-2 block"></span>
+                        </div>
+
+                        <button type="submit"
+                                class="btn-gradient flex-shrink-0 w-full sm:w-auto text-[var(--background-light)] text-lg sm:text-2xl font-medium py-3 sm:py-4 px-8 rounded flex items-center justify-center gap-2 h-14 sm:h-16 shadow-lg">
+                            @LocalizationService.GetLocalizedHtmlString("MenuResource", "StartButton")
+                            <span class="material-symbols-outlined">chevron_right</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+</div>

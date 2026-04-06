@@ -1,0 +1,20 @@
+﻿@using MovieMvcProject.Web.Areas.Admin.Models
+@using MovieMvcProject.Web.Areas.Admin.Resources
+@using Microsoft.Extensions.Localization
+
+@inject IStringLocalizer<AdminResource> Localizer
+
+@model MovieCreateUpdateViewModel
+
+@{
+    ViewData["Title"] = Model.MovieId.HasValue
+        ? Localizer["Movie.Form.Title.Edit"]
+        : Localizer["Movie.Form.Title.Create"];
+}
+
+@await Html.PartialAsync("CreateMovie/_MovieFormPartial", Model)
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    @await Html.PartialAsync("CreateMovie/_MovieFormScriptsPartial", Model)
+}

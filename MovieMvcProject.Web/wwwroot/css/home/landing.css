@@ -1,0 +1,33 @@
+﻿
+:root {
+    --background-dark: #000000;
+    --homas-red: #ea2a33;
+    --homas-orange: #ff6b00;
+    --background-light: #f8f6f6;
+}
+
+.landing-wrapper {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-dark);
+    color: var(--background-light);
+}
+
+.landing-overlay {
+    background: linear-gradient(to top, black, rgba(0,0,0,0.5), transparent);
+}
+
+
+.btn-gradient {
+    background: linear-gradient(to right, var(--homas-red), var(--homas-orange));
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+    .btn-gradient:hover {
+        filter: brightness(0.9);
+        transform: scale(1.02);
+    }
+
+.language-select-wrapper select {
+    appearance: none;
+    -webkit-appearance: none;
+}

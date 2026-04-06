@@ -1,0 +1,64 @@
+﻿version: '3.8'
+
+services:
+  # 1. ELASTICSEARCH SERVİSİ (Veri İndeksleme ve Arama)
+  # -----------------------------------------------------
+  elasticsearch:
+    
+    
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.1.5
+    container_name: moviemvc-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      # Bellek ayarı 
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" 
+    ports:
+      - "9200:9200"
+    volumes:
+      # Verilerin kaybolmaması için kalıcı depolama
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - moviemvc-net # STANDART AĞ
+
+  # 2. KIBANA SERVİSİ (Elasticsearch Arayüzü ve Görselleştirme)
+  # -----------------------------------------------------------
+  kibana:
+    
+    image: docker.elastic.co/kibana/kibana:9.1.5
+    container_name: moviemvc-kibana
+    ports:
+      - "5601:5601"
+    environment:
+      # Kibana'nın Elasticsearch'ü ağ içinden bulması için konteyner adı kullanılır
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch # ES çalışmadan Kibana başlamamalı
+    networks:
+      - moviemvc-net # STANDART AĞ
+
+  # 3. REDIS SERVİSİ (Önbellekleme ve Oturum Yönetimi)
+  # --------------------------------------------------
+  redis:
+    image: redis:7.4-alpine
+    container_name: moviemvc-redis
+    # appsettings.json dosyanızdaki şifreyi ayarlayınız
+    command: redis-server --requirepass {REDIS Password}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data # Verilerin kalıcı depolanması
+    networks:
+      - moviemvc-net # STANDART AĞ
+
+
+
+volumes:
+  elasticsearch_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  moviemvc-net: # Servisler bu ağ adını kullanmalıdır.
+    driver: bridge

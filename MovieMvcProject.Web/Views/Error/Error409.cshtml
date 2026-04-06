@@ -1,0 +1,17 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<MovieMvcProject.Domain.Resources.ExceptionResource> L
+@{
+    Layout = "_ErrorLayout";
+    ViewData["Title"] = L["Conflict"];
+}
+
+
+
+<div class="relative">
+    <div class="text-primary drop-shadow-[0_0_20px_rgba(234,42,51,0.8)] mb-4">
+        <span class="material-symbols-outlined !text-8xl">data_alert</span>
+    </div>
+    <h1 class="text-8xl font-black text-white leading-none">409</h1>
+    <h2 class="text-3xl font-bold mt-4 text-white">@L["Conflict"]</h2>
+    
+</div>

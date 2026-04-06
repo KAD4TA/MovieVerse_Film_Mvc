@@ -1,0 +1,78 @@
+﻿@using Microsoft.Extensions.Localization
+@using MovieMvcProject.Domain.Resources
+@model MovieMvcProject.Application.DTOs.RequestDto.UpdateCommentDto
+@inject IStringLocalizer<CommentResource> Localizer
+
+@if (Model == null)
+{
+    <div class="text-center py-12 text-red-500 font-medium">@Localizer["CommentLoadFailed"]</div>
+    return;
+}
+
+<div class="relative">
+    <button type="button" onclick="closeEditModal()" class="absolute -top-4 -right-4 text-gray-500 hover:text-white transition">
+        <span class="material-symbols-outlined">close</span>
+    </button>
+    <h3 class="text-2xl font-black italic mb-6 text-blue-400">@Localizer["EditCommentTitle"]</h3>
+
+    <form id="editCommentForm" action="/Comment/Edit" method="post" class="space-y-6">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="CommentId" value="@Model.CommentId" />
+        <input type="hidden" name="MovieId" value="@Model.MovieId" />
+
+        <div>
+            <textarea name="Content" rows="5" required
+                      class="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white focus:border-blue-500 outline-none transition-all resize-none">@(Model.Content?.Trim() ?? "")</textarea>
+        </div>
+
+        <div class="flex items-center gap-4 bg-black/40 px-5 py-3 rounded-xl border border-white/5 w-fit">
+            <span class="text-xs font-bold text-gray-400 uppercase">@Localizer["YourRating"]</span>
+            <div class="flex gap-1" id="edit-star-selector">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    bool isActive = Model.MovieReview.HasValue && i <= Model.MovieReview.Value;
+                    <span class="material-symbols-outlined text-2xl cursor-pointer transition-all edit-star-btn @(isActive ? "text-yellow-500" : "text-gray-600")"
+                          data-val="@i"
+                          style="font-variation-settings: 'FILL' @(isActive ? 1 : 0)">star</span>
+                }
+            </div>
+            <input type="hidden" name="MovieReview" id="editRatingInput" value="@(Model.MovieReview ?? 0)" />
+        </div>
+
+        <div class="flex gap-3 mt-6">
+            <button type="button" onclick="closeEditModal()" class="flex-1 py-4 rounded-xl bg-white/5 hover:bg-white/10 text-white font-bold transition">
+                @Localizer["Cancel"]
+            </button>
+            <button type="submit" class="flex-[2] bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-xl shadow-lg transition">
+                @Localizer["Save"]
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    (function() {
+        const editStars = document.querySelectorAll('.edit-star-btn');
+        const editRatingInput = document.getElementById('editRatingInput');
+        let currentEditRating = parseInt(editRatingInput.value) || 0;
+
+        function updateEditStars(count) {
+            editStars.forEach((s, idx) => {
+                const isActive = idx < count;
+                s.classList.toggle('text-yellow-500', isActive);
+                s.classList.toggle('text-gray-600', !isActive);
+                s.style.fontVariationSettings = `'FILL' ${isActive ? 1 : 0}`;
+            });
+        }
+
+        editStars.forEach(star => {
+            star.addEventListener('click', () => {
+                currentEditRating = parseInt(star.dataset.val);
+                editRatingInput.value = currentEditRating;
+                updateEditStars(currentEditRating);
+            });
+            star.addEventListener('mouseenter', () => updateEditStars(parseInt(star.dataset.val)));
+            star.addEventListener('mouseleave', () => updateEditStars(currentEditRating));
+        });
+    })();
+</script>

@@ -1,0 +1,25 @@
+﻿@model MovieMvcProject.Web.Models.SettingsPageViewModel
+@using Microsoft.Extensions.Localization
+@using MovieMvcProject.Domain.Resources
+
+@inject IStringLocalizer<UserResource> Localizer
+
+<section id="tab-security" class="tab-content hidden max-w-md">
+    <div class="space-y-6">
+        <div>
+            <input asp-for="CurrentPassword" type="password" placeholder="@Localizer["CurrentPasswordPlaceholder"]"
+                   class="w-full bg-gray-800/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-red-600/50 outline-none transition" />
+            <span asp-validation-for="CurrentPassword" class="text-sm text-red-500 mt-1 block"></span>
+        </div>
+        <div>
+            <input asp-for="NewPassword" type="password" placeholder="@Localizer["NewPasswordPlaceholder"]"
+                   class="w-full bg-gray-800/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-red-600/50 outline-none transition" />
+            <span asp-validation-for="NewPassword" class="text-sm text-red-500 mt-1 block"></span>
+        </div>
+        <div>
+            <input asp-for="ConfirmNewPassword" type="password" placeholder="@Localizer["ConfirmNewPasswordPlaceholder"]"
+                   class="w-full bg-gray-800/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-red-600/50 outline-none transition" />
+            <span asp-validation-for="ConfirmNewPassword" class="text-sm text-red-500 mt-1 block"></span>
+        </div>
+    </div>
+</section>

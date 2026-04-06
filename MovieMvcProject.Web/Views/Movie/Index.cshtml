@@ -1,0 +1,29 @@
+﻿@model MovieMvcProject.Application.Commons.PagedResult<MovieMvcProject.Application.DTOs.ResponseDto.MovieDtoResponse>
+@using Microsoft.Extensions.Localization
+@using MovieMvcProject.Domain.Resources
+
+@inject IStringLocalizer<MenuResource> MenuLocalizer
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = MenuLocalizer["Home"];
+    var allMovies = Model?.Items ?? Array.Empty<MovieMvcProject.Application.DTOs.ResponseDto.MovieDtoResponse>();
+    
+    
+    var heroMovies = allMovies.Where(x => x.IsOnSlider).Take(10).ToList();
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/movie/index.css" />
+}
+<main class="flex-1 bg-gray-900 min-h-screen">
+    @* --- 1. HERO SECTION (Afiş Rotasyonu) --- *@
+    <partial name="Movie/_IndexHeroSection" model="heroMovies" />
+
+    @* --- 2. GRID LISTELEME VE SAYFALAMA --- *@
+    <partial name="Movie/_IndexGridSection" model="Model" />
+</main>
+
+@section Scripts {
+    <script src="~/js/movie/index.js"></script>
+}

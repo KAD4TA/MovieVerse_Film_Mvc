@@ -1,0 +1,220 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- Microsoft ResX Schema Version 1.3 -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>1.3</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Movie General -->
+  <data name="Movie.Form.Title.Edit" xml:space="preserve"><value>Edit Movie</value></data>
+  <data name="Movie.Form.Title.Create" xml:space="preserve"><value>Add New Movie</value></data>
+  <data name="Breadcrumb.Admin" xml:space="preserve"><value>Admin</value></data>
+  <data name="Breadcrumb.Movies" xml:space="preserve"><value>Movies</value></data>
+  <data name="Button.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Button.Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Button.Update" xml:space="preserve"><value>Update</value></data>
+
+  <!-- Content Section -->
+  <data name="Section.TranslationAndContent" xml:space="preserve"><value>Translation &amp; Content</value></data>
+  <data name="Label.TurkishTitle" xml:space="preserve"><value>Turkish Title</value></data>
+  <data name="Placeholder.ExampleBaslangic" xml:space="preserve"><value>e.g. Başlangıç</value></data>
+  <data name="Label.TurkishDescription" xml:space="preserve"><value>Turkish Description</value></data>
+  <data name="Label.EnglishTitle" xml:space="preserve"><value>English Title</value></data>
+  <data name="Placeholder.ExampleInception" xml:space="preserve"><value>e.g. Inception</value></data>
+  <data name="Label.EnglishDescription" xml:space="preserve"><value>English Description</value></data>
+
+  <!-- Technical Details -->
+  <data name="Section.TechnicalDetails" xml:space="preserve"><value>Technical Details</value></data>
+  <data name="Label.Category" xml:space="preserve"><value>Category</value></data>
+  <data name="Option.Select" xml:space="preserve"><value>Select</value></data>
+  <data name="Label.ProductionYear" xml:space="preserve"><value>Production Year</value></data>
+  <data name="Label.DurationMinutes" xml:space="preserve"><value>Duration (Min)</value></data>
+  <data name="Label.ImdbRating" xml:space="preserve"><value>IMDB Rating</value></data>
+  <data name="Label.TrailerUrl" xml:space="preserve"><value>Trailer URL</value></data>
+
+  <!-- Director -->
+  <data name="Section.Director" xml:space="preserve"><value>Director</value></data>
+  <data name="Placeholder.DirectorSearch" xml:space="preserve"><value>Search Director...</value></data>
+  <data name="Text.NewRecordFor" xml:space="preserve"><value>for new record</value></data>
+  <data name="Section.NewDirector" xml:space="preserve"><value>New Director</value></data>
+  <data name="Placeholder.FullName" xml:space="preserve"><value>Full Name</value></data>
+  <data name="Placeholder.PhotoUrl" xml:space="preserve"><value>Photo URL</value></data>
+  <data name="Placeholder.BirthPlace" xml:space="preserve"><value>Birth Place</value></data>
+  <data name="Placeholder.HeightCm" xml:space="preserve"><value>Height (cm)</value></data>
+  <data name="Button.PrepareForSystem" xml:space="preserve"><value>Prepare for System</value></data>
+
+  <!-- Actors -->
+  <data name="Section.Actors" xml:space="preserve"><value>Actors</value></data>
+  <data name="Placeholder.ActorSearch" xml:space="preserve"><value>Search Actor...</value></data>
+  <data name="Section.NewActorCard" xml:space="preserve"><value>New Actor Card</value></data>
+  <data name="Placeholder.ActorName" xml:space="preserve"><value>Actor Name</value></data>
+  <data name="Button.AddToList" xml:space="preserve"><value>Add to List</value></data>
+
+  <!-- Poster -->
+  <data name="Section.MoviePoster" xml:space="preserve"><value>Movie Poster</value></data>
+  <data name="Text.PreviewNotAvailable" xml:space="preserve"><value>No Preview</value></data>
+  <data name="Text.PreviewAutoUpdate" xml:space="preserve"><value>Preview updates automatically when URL entered</value></data>
+  <data name="Text.ChangeImage" xml:space="preserve"><value>Change Image</value></data>
+
+  <!-- User Delete -->
+  <data name="User.Delete.Title" xml:space="preserve"><value>Delete User</value></data>
+  <data name="User.Delete.Confirmation" xml:space="preserve"><value>User Delete Confirmation</value></data>
+  <data name="Text.CriticalOperation" xml:space="preserve"><value>Critical Operation</value></data>
+  <data name="Text.Warning" xml:space="preserve"><value>Warning:</value></data>
+  <data name="User.Delete.WarningMessage" xml:space="preserve"><value>This user and all associated data (comments, likes, profile) will be permanently deleted. This action cannot be undone.</value></data>
+  <data name="Button.YesDeleteUser" xml:space="preserve"><value>Yes, Delete User</value></data>
+
+  <!-- User Edit -->
+  <data name="User.Edit.Title" xml:space="preserve"><value>Edit User Profile</value></data>
+  <data name="User.Edit.ProfilePhoto" xml:space="preserve"><value>Profile Photo</value></data>
+  <data name="Text.ClickToChangePhoto" xml:space="preserve"><value>Click image to change</value></data>
+  <data name="Section.AccountIdentity" xml:space="preserve"><value>Account Identity</value></data>
+  <data name="Label.FullName" xml:space="preserve"><value>Full Name</value></data>
+  <data name="Label.Email" xml:space="preserve"><value>Email Address</value></data>
+  <data name="Section.PersonalInfo" xml:space="preserve"><value>Personal Information</value></data>
+  <data name="Label.Gender" xml:space="preserve"><value>Gender</value></data>
+  <data name="Label.BirthDate" xml:space="preserve"><value>Birth Date</value></data>
+  <data name="Label.Instagram" xml:space="preserve"><value>Instagram</value></data>
+  <data name="Label.Twitter" xml:space="preserve"><value>X (Twitter)</value></data>
+  <data name="Button.Reset" xml:space="preserve"><value>Reset</value></data>
+  <data name="Button.SaveChanges" xml:space="preserve"><value>Save Changes</value></data>
+
+  <!-- List Pages -->
+  <data name="Common.BackToList" xml:space="preserve"><value>Back to List</value></data>
+  <data name="MovieList.Title" xml:space="preserve"><value>Movie List</value></data>
+  <data name="UserList.Title" xml:space="preserve"><value>User Management</value></data>
+  <data name="Common.SearchPlaceholder" xml:space="preserve"><value>Search...</value></data>
+  <data name="Common.AddNew" xml:space="preserve"><value>Add New</value></data>
+  <data name="Common.Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="Common.Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Common.NoDataFound" xml:space="preserve"><value>No data found</value></data>
+  <data name="Common.Actions" xml:space="preserve"><value>Actions</value></data>
+  <data name="Common.Users" xml:space="preserve"><value>Users</value></data>
+  <data name="Common.Page" xml:space="preserve"><value>Page</value></data>
+
+  <!-- MovieList Specific -->
+  <data name="AllMovies" xml:space="preserve"><value>All Movies</value></data>
+  <data name="TotalFound" xml:space="preserve"><value>Total Found</value></data>
+  <data name="PosterLabel" xml:space="preserve"><value>Poster</value></data>
+  <data name="TitleLabel" xml:space="preserve"><value>Title</value></data>
+  <data name="YearLabel" xml:space="preserve"><value>Year</value></data>
+  <data name="RatingLabel" xml:space="preserve"><value>Rating</value></data>
+  <data name="CategoryLabel" xml:space="preserve"><value>Category</value></data>
+  <data name="ActionsLabel" xml:space="preserve"><value>Actions</value></data>
+  <data name="DeleteConfirmTitle" xml:space="preserve"><value>Delete Confirmation</value></data>
+  <data name="DeleteConfirmDescription" xml:space="preserve"><value>Are you sure you want to delete this movie?</value></data>
+  <data name="DeleteConfirmAction" xml:space="preserve"><value>Delete</value></data>
+
+
+
+  <!-- === DASHBOARD LOCALIZATION === -->
+  <data name="Dashboard.Title" xml:space="preserve"><value>Admin Dashboard</value></data>
+  <data name="Dashboard.WelcomeBack" xml:space="preserve"><value>Welcome Back,</value></data>
+  <data name="Dashboard.TotalMovies" xml:space="preserve"><value>Total Movies</value></data>
+  <data name="Dashboard.TotalUsers" xml:space="preserve"><value>Total Users</value></data>
+  <data name="Dashboard.TotalVisitors" xml:space="preserve"><value>Total Visitors</value></data>
+  <data name="Dashboard.NewMember" xml:space="preserve"><value>New Member</value></data>
+  <data name="Dashboard.LatestFeedback" xml:space="preserve"><value>Latest Feedback</value></data>
+  <data name="Dashboard.AnalyticsOverview" xml:space="preserve"><value>Analytics Overview</value></data>
+  <data name="Dashboard.Users" xml:space="preserve"><value>USERS</value></data>
+  <data name="Dashboard.Visitors" xml:space="preserve"><value>VISITORS</value></data>
+  <data name="Dashboard.Days7" xml:space="preserve"><value>7D</value></data>
+  <data name="Dashboard.Days30" xml:space="preserve"><value>30D</value></data>
+  <data name="Dashboard.Days365" xml:space="preserve"><value>1Y</value></data>
+  <data name="Dashboard.Report" xml:space="preserve"><value>Report</value></data>
+  <data name="Dashboard.GenreDistribution" xml:space="preserve"><value>Film Genre Distribution</value></data>
+  <data name="Dashboard.RecentSystemLogs" xml:space="preserve"><value>Recent System Logs</value></data>
+  <data name="Dashboard.ViewAll" xml:space="preserve"><value>View All</value></data>
+  <data name="Dashboard.Timestamp" xml:space="preserve"><value>Timestamp</value></data>
+  <data name="Dashboard.Level" xml:space="preserve"><value>Level</value></data>
+  <data name="Dashboard.EventMessage" xml:space="preserve"><value>Event Message</value></data>
+  <data name="Dashboard.AnalyticsReport" xml:space="preserve"><value>Analytics Report</value></data>
+  <data name="Dashboard.DownloadXLSX" xml:space="preserve"><value>Download XLSX</value></data>
+  <data name="Dashboard.Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Dashboard.ReportFor" xml:space="preserve"><value>Report for:</value></data>
+  <data name="Dashboard.Date" xml:space="preserve"><value>Date</value></data>
+  <data name="Dashboard.Count" xml:space="preserve"><value>Count</value></data>
+  <data name="Dashboard.Film" xml:space="preserve"><value>Film</value></data>
+  <data name="Dashboard.User" xml:space="preserve"><value>User</value></data>
+  <data name="Dashboard.ScrollZoomPan" xml:space="preserve"><value>Zoom in</value></data>
+  <data name="Dashboard.IPAddress" xml:space="preserve"><value>IP Address</value></data>
+  <data name="Dashboard.Device" xml:space="preserve"><value>Device</value></data>
+  <data name="Dashboard.Footer" xml:space="preserve"><value>MovieVerse-Admin Panel - Kadir Çalışkan | MIT Licensed</value></data>
+
+
+  <!-- UserList Specific -->
+  <data name="UserList.UserInfo" xml:space="preserve"><value>User Info</value></data>
+  <data name="UserList.RoleGroup" xml:space="preserve"><value>Role Group</value></data>
+  <data name="UserList.SystemUserDatabase" xml:space="preserve"><value>System User Database</value></data>
+
+
+
+
+<!--  LAYOUT LOCALIZATION KEYLERİ -->
+  <data name="Menu" xml:space="preserve"><value>Menu</value></data>
+  <data name="Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Movies" xml:space="preserve"><value>Movies</value></data>
+  <data name="AddMovie" xml:space="preserve"><value>Add Movie</value></data>
+  <data name="MovieList" xml:space="preserve"><value>Movie List</value></data>
+  <data name="Users" xml:space="preserve"><value>Users</value></data>
+  <data name="Actors" xml:space="preserve"><value>Actors</value></data>
+  <data name="Directors" xml:space="preserve"><value>Directors</value></data>
+  <data name="CommentModeration" xml:space="preserve"><value>Comment Moderation</value></data>
+  <data name="SystemLogs" xml:space="preserve"><value>System Logs</value></data>
+  <data name="ReturnToSite" xml:space="preserve"><value>Return to Site</value></data>
+  <data name="SearchPlaceholder" xml:space="preserve"><value>Search...</value></data>
+  <data name="PendingComments" xml:space="preserve"><value>Pending Comments</value></data>
+  <data name="ManageAll" xml:space="preserve"><value>Manage All</value></data>
+  <data name="DarkMode" xml:space="preserve"><value>Dark Mode</value></data>
+  <data name="Logout" xml:space="preserve"><value>Logout</value></data>
+  <data name="NoPending" xml:space="preserve"><value>Great! No pending comments.</value></data>
+  <data name="NoSearchResults" xml:space="preserve"><value>No results found.</value></data>
+  <data name="Loading" xml:space="preserve"><value>Loading...</value></data>
+  <data name="Approve" xml:space="preserve"><value>Approve</value></data>
+  <data name="Reject" xml:space="preserve"><value>Reject</value></data>
+  <data name="New" xml:space="preserve"><value>New</value></data>
+
+
+
+</root>

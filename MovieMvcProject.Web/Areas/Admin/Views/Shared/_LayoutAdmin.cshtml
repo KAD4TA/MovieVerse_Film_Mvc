@@ -1,0 +1,531 @@
+﻿@using System.Globalization
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.Extensions.Localization
+@using MovieMvcProject.Domain.Resources
+@using MovieMvcProject.Domain.Identity
+@using Microsoft.AspNetCore.Identity
+@using MovieMvcProject.Web.Areas.Admin.Resources
+@inject IStringLocalizer<AdminResource> AdminLocalizer
+@inject UserManager<AppUser> UserManager
+@inject SignInManager<AppUser> SignInManager
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    string cultureName = requestCulture?.RequestCulture.Culture.Name ?? "tr-TR";
+    string langCode = cultureName.Split('-')[0];
+    string returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}{Context.Request.QueryString.Value}";
+    var currentUser = await UserManager.GetUserAsync(User);
+    string userName = currentUser?.FullName ?? "Yönetici";
+    string profileImage = !string.IsNullOrEmpty(currentUser?.ProfileImageUrl) ? currentUser.ProfileImageUrl : "/profile-images/default-profile.png";
+    var roles = currentUser != null ? await UserManager.GetRolesAsync(currentUser) : new List<string>();
+    var displayRole = roles.FirstOrDefault(r => r.ToLower() != "user")
+                      ?? roles.FirstOrDefault()
+                      ?? "GUEST";
+    string upperRole = displayRole.ToUpper(new System.Globalization.CultureInfo("tr-TR"));
+}
+<!DOCTYPE html>
+<html class="dark" lang="@langCode">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MOVIEVERSE @upperRole</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+    <script>
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+        } else {
+            document.documentElement.classList.add('dark');
+        }
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#8B5CF6",
+                        secondary: "#3B82F6",
+                        accent: "#EC4899",
+                        "surface-light": "#F8FAFC",
+                        "background-light": "#F1F5F9",
+                        "border-light": "#E2E8F0",
+                        "background-dark": "#111319",
+                        "surface-dark": "#1A1D27",
+                        "sidebar-dark": "#0D0F14",
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #374151;
+        }
+        .glass-nav {
+            background: rgba(248, 250, 252, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #E2E8F0;
+        }
+        .dark .glass-nav {
+            background: rgba(13, 15, 20, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .dropdown-menu {
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            visibility: hidden;
+        }
+            .dropdown-menu.visible {
+                opacity: 1;
+                transform: translateY(0);
+                pointer-events: auto;
+                visibility: visible;
+            }
+        .sidebar-link:hover {
+            color: #8B5CF6 !important;
+        }
+        
+        #sidebar.w-20 .sidebar-link,
+        #sidebar.w-20 .logo-container {
+            justify-content: center;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        #sidebar.w-20 .sidebar-icon {
+            margin-right: 0 !important;
+        }
+        #sidebar.w-20 .sidebar-text,
+        #sidebar.w-20 #menu-label,
+        #sidebar.w-20 .submenu-icon,
+        #sidebar.w-20 .return-text {
+            display: none !important;
+        }
+        /* Sidebar Kapalıyken (w-20) Hizalama */
+        #sidebar.w-20 .logo-container {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            height: 80px;
+            justify-content: center;
+        }
+        #sidebar.w-20 .sidebar-icon {
+            margin: 0 !important;
+            font-size: 2rem !important;
+        }
+        
+        #sidebar.w-20 #logo-text,
+        #sidebar.w-20 #role-badge {
+            display: none !important;
+        }
+        
+        #sidebar {
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        #logo-text h1 {
+            transition: all 0.3s ease;
+        }
+    </style>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-700 dark:text-gray-200 font-sans antialiased flex h-screen overflow-hidden transition-colors duration-300">
+    <div id="mobile-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 z-40 hidden md:hidden transition-opacity"></div>
+    <aside id="sidebar" class="fixed md:relative top-0 left-0 w-64 bg-white dark:bg-sidebar-dark border-r border-border-light dark:border-gray-800 flex flex-col h-full flex-shrink-0 z-50 transform -translate-x-full md:translate-x-0 transition-all duration-300">
+        <div class="h-auto py-6 flex flex-col items-center justify-center px-4 logo-container transition-all duration-300 border-b border-border-light dark:border-gray-800/40">
+            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="flex flex-col items-center w-full group">
+                <div class="flex items-center mb-3">
+                    <span class="material-icons-outlined text-primary text-3xl sidebar-icon transition-all duration-300 group-hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.5)]">
+                        movie_filter
+                    </span>
+                    <div id="logo-text" class="flex items-baseline flex-shrink-0 ml-3">
+                        <h1 class="text-3xl font-black tracking-tighter text-slate-900 dark:text-white uppercase">MOVIE</h1>
+                        <h1 class="text-3xl font-black tracking-tighter text-primary uppercase">VERSE</h1>
+                    </div>
+                </div>
+                <span id="role-badge" class="w-full text-center text-[11px] bg-primary/10 text-primary py-2 px-1 rounded-xl font-black tracking-[0.15em] uppercase border border-primary/20 shadow-sm backdrop-blur-sm">
+                    @upperRole
+                </span>
+            </a>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            <p id="menu-label" class="px-4 text-[10px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-[0.2em] mb-3">@AdminLocalizer["Menu"]</p>
+            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="sidebar-link flex items-center px-4 py-2.5 bg-primary/10 text-primary rounded-xl group relative transition-all">
+                <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full"></div>
+                <span class="material-icons-outlined text-xl sidebar-icon mr-3">grid_view</span>
+                <span class="sidebar-text font-semibold text-sm">@AdminLocalizer["Dashboard"]</span>
+            </a>
+            <button onclick="toggleSubMenu('movies-submenu')" class="sidebar-link flex items-center justify-between w-full px-4 py-2.5 text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all group">
+                <div class="flex items-center">
+                    <span class="material-icons-outlined text-xl transition-colors group-hover:text-primary sidebar-icon mr-3">movie</span>
+                    <span class="sidebar-text font-semibold text-sm transition-colors group-hover:text-primary">@AdminLocalizer["Movies"]</span>
+                </div>
+                <span id="movies-submenu-icon" class="submenu-icon material-icons-outlined text-sm opacity-50 group-hover:text-primary">expand_more</span>
+            </button>
+            <div id="movies-submenu" class="submenu-container hidden pl-11 mt-1 space-y-1">
+                <a asp-area="Admin" asp-controller="Admin" asp-action="CreateMovie" class="block py-2 text-sm text-slate-500 dark:text-gray-400 hover:text-primary font-medium transition-all">@AdminLocalizer["AddMovie"]</a>
+                <a asp-area="Admin" asp-controller="Admin" asp-action="MovieList" class="block py-2 text-sm text-slate-500 dark:text-gray-400 hover:text-primary font-medium transition-all">@AdminLocalizer["MovieList"]</a>
+            </div>
+            <a asp-area="Admin" asp-controller="Admin" asp-action="UserList" class="sidebar-link flex items-center px-4 py-2.5 text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-icons-outlined text-xl group-hover:text-primary sidebar-icon mr-3">people</span>
+                <span class="sidebar-text font-semibold text-sm group-hover:text-primary">@AdminLocalizer["Users"]</span>
+            </a>
+            <a asp-area="Admin" asp-controller="AdminActor" asp-action="Index" class="sidebar-link flex items-center px-4 py-2.5 text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-icons-outlined text-xl group-hover:text-primary sidebar-icon mr-3">recent_actors</span>
+                <span class="sidebar-text font-semibold text-sm group-hover:text-primary">@AdminLocalizer["Actors"]</span>
+            </a>
+            <a asp-area="Admin" asp-controller="AdminDirector" asp-action="Index" class="sidebar-link flex items-center px-4 py-2.5 text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-icons-outlined text-xl group-hover:text-primary sidebar-icon mr-3">movie_creation</span>
+                <span class="sidebar-text font-semibold text-sm group-hover:text-primary">@AdminLocalizer["Directors"]</span>
+            </a>
+            <a asp-area="Admin" asp-controller="AdminComments" asp-action="Index" class="sidebar-link flex items-center px-4 py-2.5 text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-icons-outlined text-xl group-hover:text-primary sidebar-icon mr-3">chat_bubble_outline</span>
+                <span class="sidebar-text font-semibold text-sm group-hover:text-primary">@AdminLocalizer["CommentModeration"]</span>
+            </a>
+            <a asp-area="Admin" asp-controller="Log" asp-action="List" class="sidebar-link flex items-center px-4 py-2.5 text-slate-600 dark:text-gray-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all group">
+                <span class="material-icons-outlined text-xl group-hover:text-primary sidebar-icon mr-3">dvr</span>
+                <span class="sidebar-text font-semibold text-sm group-hover:text-primary">@AdminLocalizer["SystemLogs"]</span>
+            </a>
+        </nav>
+        <div class="p-4 border-t border-border-light dark:border-gray-800">
+            <a asp-area="" asp-controller="Movie" asp-action="Index" class="sidebar-link flex items-center justify-center space-x-2 w-full px-4 py-2.5 text-sm font-bold text-slate-500 dark:text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
+                <span class="material-icons-outlined text-lg sidebar-icon mr-1">west</span>
+                <span class="return-text">@AdminLocalizer["ReturnToSite"]</span>
+            </a>
+        </div>
+    </aside>
+    <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        <header class="h-16 w-full glass-nav flex items-center justify-between px-4 md:px-8 sticky top-0 z-30 transition-colors duration-300">
+            <div class="flex items-center w-full md:w-auto">
+                <button onclick="toggleSidebar()" class="mr-3 md:mr-6 p-2 rounded-xl text-slate-500 hover:bg-slate-200/60 dark:hover:bg-white/5 transition-all">
+                    <span class="material-icons-outlined text-2xl">menu</span>
+                </button>
+                <div class="relative w-full md:w-96 group">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center cursor-pointer" onclick="performLiveSearch()">
+                        <span class="material-icons-outlined text-slate-400 group-focus-within:text-primary transition-colors">search</span>
+                    </span>
+                    <input id="global-search-input" onkeyup="debounceSearch()"
+                           class="block w-full pl-10 pr-4 py-2 border border-slate-200 dark:border-transparent rounded-xl bg-slate-200/50 dark:bg-white/5 text-slate-900 dark:text-gray-200 placeholder-slate-500 focus:ring-2 focus:ring-primary/20 focus:bg-white dark:focus:bg-surface-dark focus:border-primary transition-all text-sm shadow-sm"
+                           placeholder="@AdminLocalizer["SearchPlaceholder"]" type="text" />
+                    <div id="search-results" class="hidden absolute top-full left-0 mt-2 w-full max-h-80 overflow-y-auto bg-white dark:bg-surface-dark border border-slate-200 dark:border-gray-800 rounded-2xl shadow-xl z-50"></div>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2 md:space-x-6">
+                <div class="hidden md:flex bg-slate-200/50 dark:bg-black/40 rounded-xl p-1 items-center border border-slate-200 dark:border-white/5">
+                    <form asp-area="" asp-controller="Language" asp-action="SetLanguage" method="post" class="flex gap-1">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="returnUrl" value="@returnUrl" />
+                        <button type="submit" name="culture" value="tr-TR" class="w-8 h-8 rounded-lg overflow-hidden transition-all @(cultureName.StartsWith("tr") ? "ring-2 ring-primary scale-95" : "opacity-40 grayscale hover:opacity-100 hover:grayscale-0")">
+                            <img src="https://flagcdn.com/w80/tr.png" class="w-full h-full object-cover">
+                        </button>
+                        <button type="submit" name="culture" value="en-US" class="w-8 h-8 rounded-lg overflow-hidden transition-all @(cultureName.StartsWith("en") ? "ring-2 ring-primary scale-95" : "opacity-40 grayscale hover:opacity-100 hover:grayscale-0")">
+                            <img src="https://flagcdn.com/w80/us.png" class="w-full h-full object-cover">
+                        </button>
+                    </form>
+                </div>
+                <div class="relative">
+                    <button onclick="toggleNotificationDropdown()" class="relative p-2 rounded-xl hover:bg-slate-200/60 dark:hover:bg-white/5 text-slate-600 dark:text-gray-400 transition-all">
+                        <span class="material-icons-outlined text-2xl">notifications</span>
+                        <span id="notification-badge" class="absolute top-1 right-1 h-4 min-w-[16px] px-1 bg-red-500 text-[10px] text-white font-black rounded-full flex items-center justify-center border-2 border-white dark:border-background-dark hidden">0</span>
+                    </button>
+                    <div id="notification-dropdown" class="hidden absolute right-0 mt-3 w-80 bg-white dark:bg-surface-dark border border-slate-200 dark:border-gray-800 rounded-2xl shadow-2xl z-50 overflow-hidden">
+                        <div class="p-4 border-b border-slate-100 dark:border-white/5 flex items-center justify-between bg-slate-50/50 dark:bg-transparent">
+                            <h3 class="font-bold text-sm text-slate-900 dark:text-white">@AdminLocalizer["PendingComments"]</h3>
+                            <span id="notification-dropdown-count" class="text-[10px] text-primary font-black uppercase tracking-tighter">0 @AdminLocalizer["New"]</span>
+                        </div>
+                        <div id="notification-list-container" class="max-h-80 overflow-y-auto">
+                            <div class="p-8 text-center text-xs text-slate-400">@AdminLocalizer["Loading"]</div>
+                        </div>
+                        <div class="p-3 border-t border-slate-100 dark:border-white/5 text-center bg-slate-50/50 dark:bg-transparent">
+                            <a asp-area="Admin" asp-controller="AdminComments" asp-action="Index" class="text-xs text-primary hover:underline font-bold">@AdminLocalizer["ManageAll"]</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <button id="profileDropdownBtn" class="flex items-center space-x-2 md:space-x-3 p-1 md:pr-3 rounded-xl hover:bg-slate-200/60 dark:hover:bg-white/5 transition-all">
+                        <div class="h-9 w-9 rounded-lg ring-2 ring-primary/10 p-0.5 overflow-hidden">
+                            <img src="@profileImage" alt="User" class="h-full w-full rounded-lg object-cover" />
+                        </div>
+                        <div class="hidden md:block text-left">
+                            <p class="text-xs font-black text-slate-900 dark:text-white leading-none">@userName</p>
+                            <p class="text-[9px] text-slate-500 mt-1 uppercase font-bold tracking-widest">@upperRole</p>
+                        </div>
+                        <span class="hidden md:block material-icons-outlined text-slate-400 !text-lg">unfold_more</span>
+                    </button>
+                    <div id="profileDropdownMenu" class="dropdown-menu absolute top-full right-0 mt-4 w-64 bg-white dark:bg-surface-dark border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl p-2 z-[100]">
+                        <div id="theme-toggle-btn" class="flex items-center justify-between p-3 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl cursor-pointer group transition-all select-none">
+                            <div class="flex items-center gap-3">
+                                <span class="material-icons-outlined text-slate-400 group-hover:text-primary transition-colors">dark_mode</span>
+                                <span class="text-sm font-semibold text-slate-700 dark:text-gray-300 group-hover:text-primary transition-colors">@AdminLocalizer["DarkMode"]</span>
+                            </div>
+                            <label class="inline-flex items-center cursor-pointer relative pointer-events-none">
+                                <input type="checkbox" id="theme-checkbox" class="sr-only peer">
+                                <div class="w-9 h-5 bg-slate-300 dark:bg-gray-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+                        <div class="h-px bg-slate-100 dark:bg-white/5 my-1 mx-2"></div>
+                        <form asp-area="" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Movie", new { area = "" })" method="post">
+                            <button type="submit" class="w-full flex items-center gap-3 p-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl text-sm font-bold transition-all group">
+                                <span class="material-icons-outlined transition-transform group-hover:translate-x-1">logout</span>
+                                @AdminLocalizer["Logout"]
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main class="flex-1 overflow-y-auto p-4 md:p-8 transition-colors duration-300">
+            @RenderBody()
+            <footer class="mt-auto py-8 text-center text-slate-500 dark:text-gray-500 text-xs">
+                © @DateTime.Now.Year @AdminLocalizer["Dashboard.Footer"]
+            </footer>
+        </main>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const mobileOverlay = document.getElementById('mobile-overlay');
+        const noPendingText = "@AdminLocalizer["NoPending"]";
+        const approveText = "@AdminLocalizer["Approve"]";
+        const rejectText = "@AdminLocalizer["Reject"]";
+        const newText = "@AdminLocalizer["New"]";
+        
+        const noSearchResultsText = "@AdminLocalizer["NoSearchResults"]";
+        function toggleSidebar() {
+            const isMobile = window.innerWidth < 768;
+            if (isMobile) {
+                sidebar.classList.toggle('-translate-x-full');
+                mobileOverlay.classList.toggle('hidden');
+            } else {
+                if (sidebar.classList.contains('w-64')) {
+                    sidebar.classList.replace('w-64', 'w-20');
+                    document.querySelectorAll('.submenu-container').forEach(sub => sub.classList.add('hidden'));
+                } else {
+                    sidebar.classList.replace('w-20', 'w-64');
+                }
+            }
+        }
+        function toggleSubMenu(menuId) {
+            if (window.innerWidth >= 768 && sidebar.classList.contains('w-20')) {
+                toggleSidebar();
+                setTimeout(() => openMenuLogic(menuId), 300);
+            } else {
+                openMenuLogic(menuId);
+            }
+        }
+        function openMenuLogic(menuId) {
+            const submenu = document.getElementById(menuId);
+            const icon = document.getElementById(menuId + '-icon');
+            submenu.classList.toggle('hidden');
+            icon.innerText = submenu.classList.contains('hidden') ? 'expand_more' : 'expand_less';
+        }
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) {
+                sidebar.classList.remove('-translate-x-full');
+                mobileOverlay.classList.add('hidden');
+            } else {
+                sidebar.classList.remove('w-20');
+                sidebar.classList.add('w-64');
+                sidebar.classList.add('-translate-x-full');
+            }
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const themeToggleBtn = document.getElementById('theme-toggle-btn');
+            const themeCheckbox = document.getElementById('theme-checkbox');
+            const htmlElement = document.documentElement;
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            if (currentTheme === 'dark') {
+                htmlElement.classList.add('dark');
+                themeCheckbox.checked = true;
+            } else {
+                htmlElement.classList.remove('dark');
+                themeCheckbox.checked = false;
+            }
+            themeToggleBtn.addEventListener('click', function () {
+                const isChecked = !themeCheckbox.checked;
+                themeCheckbox.checked = isChecked;
+                if (isChecked) {
+                    htmlElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    htmlElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+            const roleBadge = document.getElementById('role-badge');
+            if (roleBadge) {
+                let fontSize = 11;
+                roleBadge.style.fontSize = `${fontSize}px`;
+                while (roleBadge.scrollWidth > roleBadge.offsetWidth && fontSize > 4) {
+                    fontSize -= 0.5;
+                    roleBadge.style.fontSize = `${fontSize}px`;
+                }
+            }
+        });
+        $(document).ready(function() {
+            $("#profileDropdownBtn").on("click", function(e) {
+                e.stopPropagation();
+                $("#profileDropdownMenu").toggleClass("visible");
+            });
+            $(document).on("click", function(e) {
+                if (!$(e.target).closest("#profileDropdownBtn").length && !$(e.target).closest("#profileDropdownMenu").length) {
+                    $("#profileDropdownMenu").removeClass("visible");
+                }
+                if (!$(e.target).closest("[onclick='toggleNotificationDropdown()']").length && !$(e.target).closest("#notification-dropdown").length) {
+                    $("#notification-dropdown").addClass("hidden");
+                }
+                if (!$(e.target).closest("#global-search-input").length) {
+                    $("#search-results").addClass("hidden");
+                }
+            });
+            loadNotifications();
+        });
+        function toggleNotificationDropdown() {
+            $("#notification-dropdown").toggleClass("hidden");
+        }
+        let searchTimeout;
+        function debounceSearch() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(performLiveSearch, 300);
+        }
+        async function performLiveSearch() {
+            const query = document.getElementById('global-search-input').value.trim();
+            const container = document.getElementById('search-results');
+            if (query.length < 2) { container.classList.add('hidden'); return; }
+            try {
+                const response = await fetch(`/Admin/Admin/LiveSearch?query=${encodeURIComponent(query)}`);
+                const data = await response.json();
+                if (data.success && data.items.length > 0) {
+                    container.innerHTML = data.items.map(item => `
+                        <a href="${item.url}" class="block p-3 border-b border-slate-100 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                            <div class="flex items-center gap-3">
+                                <img src="${item.photoUrl || '/images/no-poster.jpg'}" class="h-10 w-10 rounded-lg object-cover border border-slate-200 dark:border-white/10">
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-bold text-slate-900 dark:text-white">${item.title}</span>
+                                    <span class="text-[10px] text-slate-500 uppercase font-semibold">${item.type}</span>
+                                </div>
+                            </div>
+                        </a>`).join('');
+                    container.classList.remove('hidden');
+                } else {
+                    container.innerHTML = `<div class="p-4 text-sm text-slate-500 text-center">${noSearchResultsText}</div>`;
+                    container.classList.remove('hidden');
+                }
+            } catch (err) { console.error("Arama hatası:", err); }
+        }
+        async function loadNotifications() {
+            try {
+                const response = await fetch('/Admin/AdminComments/GetPendingComments');
+                if(response.ok) {
+                    const data = await response.json();
+                    updateNotificationUI(data);
+                }
+            } catch (err) { console.error("Bildirim yükleme hatası:", err); }
+        }
+        function updateNotificationUI(data) {
+            const badge = $('#notification-badge');
+            const dropdownCount = $('#notification-dropdown-count');
+            const container = $('#notification-list-container');
+            if (data.count > 0) {
+                badge.text(data.count).removeClass('hidden');
+                dropdownCount.text(`${data.count} ${newText}`);
+            } else {
+                badge.text('0').addClass('hidden');
+                dropdownCount.text(`0 ${newText}`);
+            }
+            container.empty();
+            if (!data.comments || data.comments.length === 0) {
+                container.append(`<div class="p-10 text-center text-xs text-slate-400">${noPendingText}</div>`);
+                return;
+            }
+            data.comments.forEach(comment => {
+                container.append(`
+                    <div class="p-4 border-b border-slate-50 dark:border-white/5 hover:bg-slate-50/80 dark:hover:bg-white/5 transition-all">
+                        <div class="flex gap-3">
+                            <img src="${comment.userImage}" class="w-8 h-8 rounded-lg object-cover shadow-sm">
+                            <div class="flex-1 overflow-hidden">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs font-bold truncate text-slate-900 dark:text-white">${comment.userName}</span>
+                                    <span class="text-[9px] text-slate-400">${new Date(comment.date).toLocaleTimeString('tr-TR')}</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 mt-1 italic line-clamp-2">"${comment.content}"</p>
+                                <div class="flex gap-2 mt-3">
+                                    <button onclick="quickAction('${comment.id}', 'Approve')" class="flex-1 py-1.5 bg-green-500/10 hover:bg-green-500 text-green-600 hover:text-white rounded-lg text-[10px] font-bold transition-all border border-green-500/20">${approveText}</button>
+                                    <button onclick="quickAction('${comment.id}', 'Reject')" class="flex-1 py-1.5 bg-red-500/10 hover:bg-red-500 text-red-600 hover:text-white rounded-lg text-[10px] font-bold transition-all border border-red-500/20">${rejectText}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`);
+            });
+        }
+        async function quickAction(id, type) {
+        try {
+            // Sayfadaki herhangi bir formdan anti-forgery token'ını almak için
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+    
+            const response = await fetch(`/Admin/AdminComments/Quick${type}?id=${id}`, {
+                method: 'POST',
+                headers: { 
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'RequestVerificationToken': token // Token'ı buraya ekliyoruz
+                }
+            });
+    
+            // Yanıtın başarılı olup olmadığını kontrol etmek için (400, 404, 500 vb. hatalar için)
+            if (!response.ok) {
+                throw new Error(`Sunucu hatası: ${response.status}`);
+            }
+    
+            const result = await response.json();
+            if (result.success) {
+                iziToast.success({
+                    title: 'İşlem Başarılı',
+                    message: result.message,
+                    position: 'topRight',
+                    backgroundColor: document.documentElement.classList.contains('dark') ? '#1A1D27' : '#FFFFFF',
+                    titleColor: '#8B5CF6',
+                    messageColor: document.documentElement.classList.contains('dark') ? '#fff' : '#334155'
+                });
+                loadNotifications(); // Listeyi yenileme
+            }
+        } catch (err) { 
+            console.error("Aksiyon hatası:", err);
+            iziToast.error({ title: 'Hata', message: 'İşlem gerçekleştirilemedi.' });
+            }
+        }
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/adminHub")
+            .withAutomaticReconnect()
+            .build();
+        connection.on("ReceiveNotification", (message, title) => {
+            iziToast.info({
+                title: title || 'Yeni Yorum',
+                message: message,
+                position: 'topRight'
+            });
+            loadNotifications();
+        });
+        connection.start().catch(err => console.error("SignalR Bağlantı Hatası:", err));
+    </script>
+    
+</body>
+
+</html>

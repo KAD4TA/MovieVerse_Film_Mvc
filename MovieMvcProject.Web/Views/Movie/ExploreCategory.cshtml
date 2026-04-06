@@ -1,0 +1,42 @@
+﻿@using MovieMvcProject.Application.Commons
+@using MovieMvcProject.Application.DTOs.ResponseDto
+@using Microsoft.AspNetCore.Mvc.Localization
+@using MovieMvcProject.Domain.Resources
+@using Microsoft.Extensions.Localization
+
+@model PagedResult<MovieDtoResponse>
+@inject IStringLocalizer<MenuResource> MenuLocalizer
+
+@{
+    ViewData["Title"] = MenuLocalizer["Explore"];
+    Layout = "_Layout";
+    var selectedCategory = Context.Request.Query["category"].ToString() ?? string.Empty;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/explorecategory/explore-category.css" />
+}
+
+<main class="min-h-screen pt-12 pb-24 px-6 md:px-16 bg-[#0a0a0a]">
+    
+    <partial name="ExploreCategory/_ExploreHeader" />
+
+    <partial name="ExploreCategory/_GenreSelector" model="selectedCategory" />
+
+    <div class="mt-12">
+        @if (string.IsNullOrEmpty(selectedCategory))
+        {
+            <partial name="ExploreCategory/_WeeklyTrending" />
+        }
+        else
+        {
+            ViewData["SelectedCategory"] = selectedCategory;
+            <partial name="ExploreCategory/_MovieList" model="Model" view-data="ViewData" />
+        }
+    </div>
+
+</main>
+
+@section Scripts {
+    <script src="~/js/explorecategory/explore-category.js"></script>
+}

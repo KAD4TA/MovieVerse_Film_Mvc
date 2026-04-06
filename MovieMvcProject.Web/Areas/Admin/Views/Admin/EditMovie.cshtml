@@ -1,0 +1,195 @@
+﻿@using MovieMvcProject.Web.Areas.Admin.Models
+@using MovieMvcProject.Domain.Enums
+@using MovieMvcProject.Web.Helpers
+@using System.Web
+@using Microsoft.Extensions.Localization
+@using MovieMvcProject.Web.Areas.Admin.Resources
+
+@inject MovieMvcProject.Application.Interfaces.ILocalization.ILocalizationService LocalizationService
+@inject IStringLocalizer<AdminResource> Localizer
+
+@model MovieCreateUpdateViewModel
+@{
+    ViewData["Title"] = Localizer["Movie.Form.Title.Edit"];
+    Layout = "_LayoutAdmin";
+    var categoryItems = EnumSelectListHelper.GetLocalizedEnumSelectList<Category>(LocalizationService);
+}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="~/css/admin/admin-movie-edit.css" asp-append-version="true" />
+
+<div class="p-4 lg:p-10 max-w-[1600px] mx-auto min-h-screen">
+    <form asp-area="Admin" asp-controller="Admin" asp-action="EditMovie" method="post" id="movieForm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="MovieId" />
+        <input type="hidden" name="ExistingDirectorId" id="hfDirectorId" value="@Model.ExistingDirectorId" />
+        <input type="hidden" asp-for="DirectorName" id="hfNewDirectorName" />
+        <input type="hidden" asp-for="DirectorPhotoUrl" id="hfNewDirectorPhoto" />
+        
+        <div class="flex justify-end mb-6">
+            <a asp-action="MovieList" class="group inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-500 dark:text-gray-400 hover:text-slate-800 dark:hover:text-white rounded-xl border border-slate-200 dark:border-white/5 transition-all text-[10px] font-black uppercase tracking-widest shadow-sm">
+                <span class="material-symbols-outlined text-sm group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                <span>@Localizer["Common.BackToList"]</span>
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div class="lg:col-span-2 space-y-10">
+                
+                <div class="glass-panel p-8 z-low">
+                    <div class="flex items-center gap-3 mb-8 text-blue-600">
+                        <span class="material-symbols-outlined text-3xl">description</span>
+                        <h2 class="text-xl font-black uppercase tracking-widest">@Localizer["Section.TranslationAndContent"]</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">@Localizer["Label.TurkishTitle"]</label>
+                            <input asp-for="TurkishTitle" class="form-input" required />
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">@Localizer["Label.EnglishTitle"]</label>
+                            <input asp-for="EnglishTitle" class="form-input" required />
+                        </div>
+                        <div class="md:col-span-2 space-y-2">
+                            <label class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">@Localizer["Label.TurkishDescription"]</label>
+                            <textarea asp-for="TurkishDescription" rows="4" class="form-input" required></textarea>
+                        </div>
+                        <div class="md:col-span-2 space-y-2">
+                            <label class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">@Localizer["Label.EnglishDescription"]</label>
+                            <textarea asp-for="EnglishDescription" rows="4" class="form-input" required></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-8 z-high">
+                    <div class="flex items-center gap-3 mb-8 text-sky-600">
+                        <span class="material-symbols-outlined text-3xl">person</span>
+                        <h2 class="text-xl font-black uppercase tracking-widest">@Localizer["Section.Director"]</h2>
+                    </div>
+                    <div id="director-selected" class="mb-6 hidden p-5 bg-sky-50 dark:bg-sky-500/5 rounded-2xl border border-sky-100 dark:border-sky-500/20 flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <img id="d-img" src="" class="w-16 h-16 rounded-full object-cover ring-4 ring-white dark:ring-slate-800 shadow-sm">
+                            <div>
+                                <p id="d-name" class="font-bold text-slate-800 dark:text-white"></p>
+                                <span id="d-status" class="text-[9px] font-bold bg-sky-100 text-sky-600 px-2 py-0.5 rounded uppercase"></span>
+                            </div>
+                        </div>
+                        <button type="button" onclick="resetDirector()" class="text-xs font-bold text-slate-400 hover:text-red-500 uppercase">@Localizer["Common.Edit"]</button>
+                    </div>
+                    <div id="director-search-container" class="relative">
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+                            <input type="text" id="d-input" class="form-input !pl-12" placeholder="@Localizer["Placeholder.DirectorSearch"]">
+                        </div>
+                        <div id="d-results" class="search-results-box hidden">
+                            <div id="d-list" class="max-h-60 overflow-y-auto"></div>
+                            <div class="search-item text-blue-600 font-bold border-t" onclick="openManualDirector()">
+                                <span class="material-symbols-outlined">add_circle</span>
+                                <span>"<span class="q-text"></span>" @Localizer["Text.NewRecordFor"]</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="manual-director-form" class="mt-4 p-6 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-2xl hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="manual-d-name" class="form-input" placeholder="@Localizer["Placeholder.FullName"]">
+                            <input type="text" id="manual-d-photo" class="form-input" placeholder="@Localizer["Placeholder.PhotoUrl"]">
+                        </div>
+                        <button type="button" onclick="confirmManualDirector()" class="mt-4 w-full bg-sky-600 text-white p-3 rounded-xl font-bold text-xs uppercase">@Localizer["Button.Save"]</button>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-8 z-low">
+                    <div class="flex items-center gap-3 mb-8 text-amber-600">
+                        <span class="material-symbols-outlined text-3xl">groups</span>
+                        <h2 class="text-xl font-black uppercase tracking-widest">@Localizer["Section.Actors"]</h2>
+                    </div>
+                    <div id="actor-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8"></div>
+                    <div class="relative">
+                        <input type="text" id="a-input" class="form-input" placeholder="@Localizer["Placeholder.ActorSearch"]">
+                        <div id="a-results" class="search-results-box hidden">
+                            <div id="a-list" class="max-h-60 overflow-y-auto"></div>
+                            <div class="search-item text-amber-600 font-bold border-t" onclick="openManualActor()">
+                                <span class="material-symbols-outlined">person_add</span>
+                                <span>"<span class="q-text-a"></span>" @Localizer["Text.NewRecordFor"]</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="manual-actor-form" class="mt-4 p-6 border-2 border-dashed border-slate-200 rounded-2xl hidden">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="manual-a-name" class="form-input" placeholder="@Localizer["Placeholder.ActorName"]">
+                            <input type="text" id="manual-a-photo" class="form-input" placeholder="@Localizer["Placeholder.PhotoUrl"]">
+                        </div>
+                        <button type="button" onclick="confirmManualActor()" class="mt-4 w-full bg-amber-600 text-white p-3 rounded-xl font-bold text-xs uppercase">@Localizer["Button.AddToList"]</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-8">
+                <div class="glass-panel p-6">
+                    <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">@Localizer["Section.MoviePoster"]</label>
+                    <input asp-for="PosterUrl" id="PosterUrlInput" class="form-input text-xs mt-2 mb-4" />
+                    <div class="aspect-[2/3] rounded-2xl bg-slate-100 dark:bg-slate-900 border-2 border-dashed border-slate-200 dark:border-slate-800 overflow-hidden relative">
+                        <img id="poster-preview" src="@Model.PosterUrl" class="w-full h-full object-cover @(string.IsNullOrEmpty(Model.PosterUrl) ? "hidden" : "")" />
+                    </div>
+                </div>
+
+                <div class="glass-panel p-6 flex flex-col justify-center">
+                    <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest flex items-center gap-2 mb-2">
+                        <span class="material-symbols-outlined text-[18px] leading-none">play_circle</span>
+                        <span>@Localizer["Label.TrailerUrl"]</span>
+                    </label>
+                    <input asp-for="VideoUrl" class="form-input text-xs" placeholder="https://youtube.com/..." />
+                </div>
+
+                <div class="glass-panel p-8 sticky top-10 border-t-4 border-t-blue-500">
+                    <div class="space-y-6 mb-8">
+                        <div>
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">@Localizer["Label.Category"]</label>
+                            <div class="select-wrapper mt-2">
+                                <select asp-for="Category" asp-items="categoryItems" class="form-select font-bold text-sm"></select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">@Localizer["Label.ProductionYear"]</label>
+                                <input asp-for="Year" type="number" class="form-input mt-1">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">@Localizer["Label.ImdbRating"]</label>
+                                    <input asp-for="Rating" class="form-input mt-1">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">@Localizer["Label.DurationMinutes"]</label>
+                                    <input asp-for="DurationMinutes" type="number" class="form-input mt-1">
+                                    </div>
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-black text-lg shadow-lg shadow-blue-500/20 transition-all uppercase">
+                                    @Localizer["Button.Update"]
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            @section Scripts {
+                <partial name="_ValidationScriptsPartial" />
+                <script src="~/js/admin/admin-movie-edit.js" asp-append-version="true"></script>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        @if (Model.Actors != null)
+                        {
+                                @foreach (var a in Model.Actors)
+                                {
+                                        <text>window.addActorCard('@a.ActorId', '@Html.Raw(HttpUtility.JavaScriptStringEncode(a.Name))', '@a.AvatarUrl');</text>
+                                }
+                        }
+            
+                        @if (Model.ExistingDirectorId.HasValue && Model.ExistingDirectorId != Guid.Empty)
+                        {
+                                <text>window.setDirector('@Model.ExistingDirectorId', '@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.ExistingDirectorName))', '@Model.DirectorPhotoUrl', false);</text>
+                        }
+                    });
+                </script>
+            }

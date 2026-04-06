@@ -1,0 +1,10 @@
+﻿@using MovieMvcProject.Web.Areas.Admin.Resources
+@using Microsoft.Extensions.Localization
+@model MovieMvcProject.Web.Areas.Admin.Models.LogListViewModel
+@inject IStringLocalizer<AdminLogResource> Localizer
+@{
+    ViewData["Title"] = Localizer["PageTitle_SystemLogs"];
+    Layout = "_LayoutAdmin";
+}
+
+@await Html.PartialAsync("Log/_LogList", Model)

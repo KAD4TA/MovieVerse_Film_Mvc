@@ -1,0 +1,79 @@
+﻿@model MovieMvcProject.Application.Commons.PagedResult<MovieMvcProject.Web.Models.WishlistViewModel>
+@using Microsoft.Extensions.Localization
+@using MovieMvcProject.Domain.Resources
+@inject IStringLocalizer<WishlistResource> Localizer
+
+@{
+    ViewData["Title"] = Localizer["PageTitle"];
+    Layout = "_Layout";
+}
+
+<main class="wishlist-main px-4 font-sans">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex items-end justify-between mb-12">
+            <h1 class="text-4xl md:text-5xl font-black italic tracking-tight uppercase text-white">
+                @Localizer["WishlistHeader"]
+            </h1>
+            <span class="text-blue-400 text-sm font-medium">
+                @Localizer["TotalFilms", Model.TotalCount]
+            </span>
+        </div>
+
+        @Html.AntiForgeryToken() 
+
+        @if (Model?.Items == null || !Model.Items.Any())
+        {
+            <div class="glass-panel p-20 rounded-[3rem] text-center">
+                <span class="material-symbols-outlined text-7xl text-gray-700 mb-6">favorite</span>
+                <p class="text-gray-500 text-xl font-bold mb-8">@Localizer["NoMoviesInList"]</p>
+                <a asp-controller="Movie" asp-action="Index"
+                       class="inline-block bg-blue-600 hover:bg-blue-700 transition px-12 py-4 rounded-2xl font-black uppercase tracking-wide text-white">
+                    @Localizer["DiscoverMovies"]
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8" id="wishlistContainer">
+                @foreach (var item in Model.Items)
+                {
+                    <partial name="Wishlist/_WishlistItemPartial" model="item" />
+                }
+            </div>
+
+            @if (Model.TotalPages > 1)
+            {
+                <div class="mt-20 flex justify-center items-center gap-3 flex-wrap">
+                    <a href="/MyList?pageNumber=@(Model.PageNumber - 1)"
+                           class="page-link-custom @(Model.PageNumber <= 1 ? "disabled" : "")">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </a>
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        if (i == 1 || i == Model.TotalPages || (i >= Model.PageNumber - 2 && i <= Model.PageNumber + 2))
+                        {
+                            <a href="/MyList?pageNumber=@i" class="page-link-custom @(i == Model.PageNumber ? "active" : "")">@i</a>
+                        }
+                    }
+                    <a href="/MyList?pageNumber=@(Model.PageNumber + 1)"
+                           class="page-link-custom @(Model.PageNumber >= Model.TotalPages ? "disabled" : "")">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </a>
+                </div>
+            }
+        }
+    </div>
+</main>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/wishlist/wishlist.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" asp-append-version="true" />
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.js" asp-append-version="true"></script>
+
+    
+    <script src="~/js/wishlist/wishlist.js" asp-append-version="true"></script>
+}

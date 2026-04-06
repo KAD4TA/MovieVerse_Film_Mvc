@@ -1,0 +1,30 @@
+﻿@model MovieMvcProject.Web.Models.EmailViewModel
+@using System.Globalization
+@{
+    Layout = null; 
+    var langCode = CultureInfo.CurrentCulture.Name.Split('-')[0].ToLowerInvariant();
+}
+
+<!DOCTYPE html>
+<html lang="@langCode">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>MOVIEVERSE</title>
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="~/css/home/landing.css" asp-append-version="true" />
+</head>
+<body>
+   
+    @* Partial İçeriği *@
+    <partial name="Home/_LandingPartial" model="Model" />
+
+    <script src="~/js/home/landing.js" asp-append-version="true"></script>
+    
+    
+</body>
+</html>

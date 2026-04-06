@@ -1,0 +1,138 @@
+﻿@using MovieMvcProject.Web.Areas.Admin.Resources
+@model MovieMvcProject.Web.Models.ActorEditViewModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<AdminActorDirectorResource> ActorLocalizer
+@{
+    ViewData["Title"] = ActorLocalizer["Edit.Title"];
+    Layout = "_LayoutAdmin";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/adminactor/actor-custom.css" />
+}
+
+<div class="max-w-5xl mx-auto space-y-8 pb-12">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="bg-emerald-100 dark:bg-emerald-900/30 border border-emerald-400 dark:border-emerald-500 text-emerald-700 dark:text-emerald-300 px-6 py-4 rounded-2xl flex items-center gap-3 text-sm font-medium animate-in fade-in duration-500">
+            <span class="material-icons-outlined">check_circle</span>
+            @ActorLocalizer["Edit.SuccessMessage"]
+        </div>
+    }
+    <form id="EditActorForm" asp-area="Admin" asp-controller="AdminActor" asp-action="Edit" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="ActorId" />
+    </form>
+    
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">@ActorLocalizer["Edit.Header"]</h1>
+            <p class="text-slate-500 dark:text-gray-400 mt-1">@ActorLocalizer["Edit.Subtitle"]</p>
+        </div>
+        <div class="flex items-center gap-4">
+            <a asp-area="Admin" asp-controller="AdminActor" asp-action="Index"
+                   class="px-6 py-3 text-sm font-semibold text-slate-600 dark:text-gray-400 bg-white dark:bg-surface-dark border border-slate-200 dark:border-white/10 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
+                @ActorLocalizer["Edit.Cancel"]
+            </a>
+            <button type="submit" form="EditActorForm"
+                    class="flex items-center gap-3 px-6 py-3 text-sm font-bold text-white bg-[#8B5CF6] hover:bg-[#7C3AED] rounded-2xl shadow-lg shadow-[#8B5CF6]/30 transition-all hover:-translate-y-0.5 active:translate-y-0">
+                <span class="material-icons-outlined text-xl">save</span>
+                @ActorLocalizer["Edit.SaveChanges"]
+            </button>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-8">
+            <div class="bg-white dark:bg-surface-dark rounded-3xl border border-slate-200 dark:border-white/10 p-8 shadow-sm">
+                <h2 class="flex items-center gap-3 text-xl font-bold text-slate-900 dark:text-white mb-8">
+                    <span class="material-icons-outlined text-[#8B5CF6]">person</span>
+                    @ActorLocalizer["Edit.BasicInfo"]
+                </h2>
+                <div class="grid gap-8">
+                    <div>
+                        <label asp-for="Name" class="block text-sm font-semibold text-slate-600 dark:text-gray-400 mb-2">@ActorLocalizer["Edit.FullName"]</label>
+                        <input asp-for="Name" form="EditActorForm" placeholder="Enter actor name"
+                               class="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-5 py-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#8B5CF6]/30 outline-none transition-all" />
+                        <span asp-validation-for="Name" class="text-red-500 text-xs mt-1 block"></span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <label asp-for="BirthDate" class="block text-sm font-semibold text-slate-600 dark:text-gray-400 mb-2">@ActorLocalizer["Edit.BirthDate"]</label>
+                            <input asp-for="BirthDate" type="date" form="EditActorForm"
+                                   class="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-5 py-4 text-slate-900 dark:text-white outline-none" />
+                        </div>
+                        <div>
+                            <label asp-for="BirthPlace" class="block text-sm font-semibold text-slate-600 dark:text-gray-400 mb-2">@ActorLocalizer["Edit.BirthPlace"]</label>
+                            <input asp-for="BirthPlace" form="EditActorForm" placeholder="City, Country"
+                                   class="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-5 py-4 text-slate-900 dark:text-white outline-none" />
+                        </div>
+                    </div>
+                    <div>
+                        <label asp-for="Height" class="block text-sm font-semibold text-slate-600 dark:text-gray-400 mb-2">@ActorLocalizer["Edit.Height"]</label>
+                        <div class="flex gap-3">
+                            <input asp-for="Height" type="number" step="0.01" form="EditActorForm" placeholder="1.85"
+                                   class="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-5 py-4 text-slate-900 dark:text-white outline-none" />
+                            <span class="inline-flex items-center px-5 text-sm font-medium text-slate-500 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl">@ActorLocalizer["Edit.HeightUnit"]</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            @* Filmography Partial Çağrısı *@
+            <partial name="AdminActor/_ActorFilmographyPartial" model="Model" />
+            
+        </div>
+        
+        <div class="space-y-8">
+            <div class="bg-white dark:bg-surface-dark rounded-3xl border border-slate-200 dark:border-white/10 p-8 shadow-sm">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-8">@ActorLocalizer["Edit.ProfilePhoto"]</h2>
+                <div class="flex flex-col items-center gap-6">
+                    <div class="relative w-48 h-64 rounded-3xl overflow-hidden shadow-2xl ring-4 ring-white dark:ring-slate-800 bg-slate-100 dark:bg-zinc-800">
+                        <img src="@(string.IsNullOrEmpty(Model.AvatarUrl) ? "profile-images/default-profile.png" : Model.AvatarUrl)"
+                             class="w-full h-full object-cover" id="avatarPreview" alt="Actor Preview" />
+                    </div>
+                    <div class="w-full space-y-2">
+                        <label asp-for="AvatarUrl" class="block text-sm font-semibold text-slate-600 dark:text-gray-400">@ActorLocalizer["Edit.PhotoUrlLabel"]</label>
+                        <div class="flex w-full items-stretch gap-2">
+                            <input asp-for="AvatarUrl" form="EditActorForm" id="AvatarUrlInput"
+                                   class="flex-1 min-w-0 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#8B5CF6]/30 outline-none transition-all" />
+                            <button type="button" onclick="copyAvatarUrl()"
+                                    class="flex-shrink-0 px-4 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl hover:bg-slate-200 dark:hover:bg-white/10 transition-colors group">
+                                <span class="material-icons-outlined text-slate-500 group-hover:text-[#8B5CF6] text-base">content_copy</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-surface-dark rounded-3xl border border-slate-200 dark:border-white/10 p-8 shadow-sm">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6">@ActorLocalizer["Edit.MetaData"]</h2>
+                <div class="space-y-4 text-sm mb-10">
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-500">@ActorLocalizer["Edit.SystemId"]</span>
+                        <span class="font-mono text-slate-400 text-xs">#@Model.ActorId.ToString().ToUpper().Substring(0, 8)</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-500">@ActorLocalizer["Edit.TotalAppearances"]</span>
+                        <span class="bg-[#8B5CF6]/10 text-[#8B5CF6] px-3 py-1 rounded-full font-bold text-xs">@(Model.Movies?.Count ?? 0) Movies</span>
+                    </div>
+                </div>
+                <form asp-area="Admin" asp-controller="AdminActor" asp-action="Delete" method="post"
+                      onsubmit="return confirm('⚠️ CRITICAL: Are you sure you want to delete this actor permanently?');">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.ActorId" />
+                    <button type="submit"
+                            class="w-full py-4 text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 font-bold rounded-2xl border border-red-200 dark:border-red-900/30 transition-all flex items-center justify-center gap-2">
+                        <span class="material-icons-outlined">delete_forever</span>
+                        @ActorLocalizer["Edit.DeleteActor"]
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/adminactor/actor-edit.js"></script>
+}

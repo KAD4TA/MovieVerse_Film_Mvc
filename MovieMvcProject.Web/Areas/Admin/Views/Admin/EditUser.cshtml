@@ -1,0 +1,141 @@
+﻿@using MovieMvcProject.Web.Helpers
+@using Microsoft.Extensions.Localization
+@using MovieMvcProject.Web.Areas.Admin.Resources
+
+@model MovieMvcProject.Web.Areas.Admin.Models.UserUpdateViewModel
+@inject MovieMvcProject.Application.Interfaces.ILocalization.ILocalizationService LocalizationService
+@inject IStringLocalizer<AdminResource> Localizer
+
+@{
+    var profileImageUrl = string.IsNullOrEmpty(Model.ProfileImageUrl)
+        ? "/profile-images/default-profile.png"
+        : (Model.ProfileImageUrl.StartsWith("/") ? Model.ProfileImageUrl : "/" + Model.ProfileImageUrl);
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="stylesheet" href="~/css/admin/user-edit.css" asp-append-version="true" />
+
+<div class="min-h-screen bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300">
+    <div class="container mx-auto py-10 px-6 max-w-5xl animate-in fade-in duration-700">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+            <div class="flex items-center gap-5">
+                <div class="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center border border-indigo-500/20 shadow-sm">
+                    <span class="material-icons-outlined text-indigo-500 text-3xl">manage_accounts</span>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-black text-slate-800 dark:text-white tracking-tight">@Localizer["User.Edit.Title"]</h1>
+                    <p class="text-slate-500 dark:text-gray-500 text-[10px] font-black uppercase tracking-[0.2em] mt-1">Sistem Protokolü / Kimlik Yönetimi</p>
+                </div>
+            </div>
+            <a asp-action="UserList" class="group inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-500 dark:text-gray-400 hover:text-slate-800 dark:hover:text-white rounded-xl border border-slate-200 dark:border-white/5 transition-all text-xs font-bold uppercase tracking-widest shadow-sm">
+                <span class="material-icons-outlined text-sm group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                @Localizer["Common.BackToList"]
+            </a>
+        </div>
+
+        <form asp-action="EditUser" method="post" enctype="multipart/form-data" class="space-y-6">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="UserId" />
+
+            <!-- AVATAR + TÜM FORM İÇERİĞİ -->
+            <div class="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 rounded-[2.5rem] p-10 shadow-sm dark:shadow-2xl relative overflow-hidden group">
+                <div class="flex flex-col items-center justify-center space-y-6">
+                    <div class="relative avatar-wrapper cursor-pointer" onclick="document.getElementById('ProfileImage').click()">
+                        <div class="w-44 h-44 rounded-full overflow-hidden ring-4 ring-indigo-500/20 p-1 bg-slate-100 dark:bg-[#0f172a] shadow-2xl transition-all group-hover:ring-indigo-500/40">
+                            <img id="previewImage" src="@profileImageUrl" class="w-full h-full object-cover rounded-full transition-transform duration-700 group-hover:scale-105" onerror="this.src='/profile-images/default-profile.png';" />
+                        </div>
+                        <div class="avatar-overlay absolute inset-0 bg-indigo-500/40 rounded-full flex items-center justify-center opacity-0 transition-opacity duration-300">
+                            <span class="material-icons-outlined text-white text-4xl">add_a_photo</span>
+                        </div>
+                        <div class="absolute bottom-2 right-2 w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center shadow-lg border-4 border-white dark:border-[#1e293b]">
+                            <span class="material-icons-outlined text-xl">edit</span>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <h2 class="text-lg font-black text-slate-800 dark:text-white uppercase tracking-widest">@Localizer["User.Edit.ProfilePhoto"]</h2>
+                        <p class="text-slate-400 dark:text-gray-500 text-[10px] font-bold uppercase mt-1">@Localizer["Text.ClickToChangePhoto"]</p>
+                        <input asp-for="ProfileImage" type="file" accept="image/*" class="hidden" onchange="previewFile(this)" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACCOUNT IDENTITY -->
+            <div class="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 rounded-[2.5rem] p-8 shadow-sm dark:shadow-2xl">
+                <div class="flex items-center gap-3 mb-8">
+                    <span class="material-icons-outlined text-indigo-500">account_circle</span>
+                    <h2 class="text-lg font-black text-slate-800 dark:text-white uppercase tracking-wider">@Localizer["Section.AccountIdentity"]</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label asp-for="FullName" class="text-[10px] font-black text-slate-400 dark:text-gray-500 uppercase tracking-widest ml-1">@Localizer["Label.FullName"]</label>
+                        <div class="relative">
+                            <span class="material-icons-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-gray-600">badge</span>
+                            <input asp-for="FullName" class="custom-input w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-white rounded-xl pl-12 pr-6 py-4 outline-none transition-all focus:border-indigo-500/50" placeholder="Örn: John Doe" />
+                        </div>
+                        <span asp-validation-for="FullName" class="text-red-400 text-[10px] font-bold mt-1 block"></span>
+                    </div>
+                    <div class="space-y-2">
+                        <label asp-for="Email" class="text-[10px] font-black text-slate-400 dark:text-gray-500 uppercase tracking-widest ml-1">@Localizer["Label.Email"]</label>
+                        <div class="relative">
+                            <span class="material-icons-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 dark:text-gray-700">mail</span>
+                            <input asp-for="Email" readonly class="w-full bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-xl pl-12 pr-6 py-4 text-slate-400 dark:text-gray-500 italic cursor-not-allowed" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PERSONAL INFO -->
+            <div class="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 rounded-[2.5rem] p-8 shadow-sm dark:shadow-2xl transition-all">
+                <div class="flex items-center gap-3 mb-8">
+                    <span class="material-icons-outlined text-indigo-500">info</span>
+                    <h2 class="text-lg font-black text-slate-800 dark:text-white uppercase tracking-wider">@Localizer["Section.PersonalInfo"]</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label asp-for="Gender" class="text-[10px] font-black text-slate-400 dark:text-gray-500 uppercase tracking-widest ml-1">@Localizer["Label.Gender"]</label>
+                        <div class="relative">
+                            <select asp-for="Gender" asp-items="@LocalizationService.GetLocalizedEnumSelectList<MovieMvcProject.Domain.Enums.Gender>(Model.Gender)"
+                                    class="custom-input w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-white rounded-xl px-6 py-4 outline-none appearance-none cursor-pointer focus:border-indigo-500/50 transition-all">
+                            </select>
+                            <span class="material-icons-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-gray-600 pointer-events-none">expand_more</span>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label asp-for="BirthDate" class="text-[10px] font-black text-slate-400 dark:text-gray-500 uppercase tracking-widest ml-1">@Localizer["Label.BirthDate"]</label>
+                        <input asp-for="BirthDate" type="date" class="custom-input w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-white rounded-xl px-6 py-4 outline-none focus:border-indigo-500/50 transition-all" />
+                    </div>
+                    <div class="space-y-2 instagram-field">
+                        <label asp-for="InstagramUrl" class="text-[10px] font-black text-slate-400 dark:text-gray-500 uppercase tracking-widest ml-1">@Localizer["Label.Instagram"]</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-gray-600 transition-colors duration-300">
+                                <i class="fa-brands fa-instagram text-xl"></i>
+                            </span>
+                            <input asp-for="InstagramUrl" class="custom-input w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-white rounded-xl pl-12 pr-6 py-4 outline-none focus:border-indigo-500/50 transition-all" placeholder="@@kullaniciadi" />
+                        </div>
+                    </div>
+                    <div class="space-y-2 x-field">
+                        <label asp-for="TwitterUrl" class="text-[10px] font-black text-slate-400 dark:text-gray-500 uppercase tracking-widest ml-1">@Localizer["Label.Twitter"]</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-gray-600 transition-colors duration-300">
+                                <i class="fa-brands fa-x-twitter text-xl"></i>
+                            </span>
+                            <input asp-for="TwitterUrl" class="custom-input w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-white rounded-xl pl-12 pr-6 py-4 outline-none focus:border-indigo-500/50 transition-all" placeholder="@@kullaniciadi" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-4 pt-6">
+                <button type="reset" class="px-8 py-4 text-slate-400 hover:text-slate-800 dark:hover:text-white text-[10px] font-black uppercase tracking-widest transition-all">
+                    @Localizer["Button.Reset"]
+                </button>
+                <button type="submit" class="flex items-center justify-center gap-3 px-12 py-4 bg-indigo-600 text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-2xl shadow-lg shadow-indigo-500/20 hover:bg-indigo-500 hover:scale-[1.02] active:scale-95 transition-all">
+                    <span class="material-icons-outlined">save</span>
+                    @Localizer["Button.SaveChanges"]
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/js/admin/user-edit.js" asp-append-version="true"></script>

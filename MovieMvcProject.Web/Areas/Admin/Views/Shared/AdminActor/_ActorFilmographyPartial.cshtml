@@ -1,0 +1,56 @@
+﻿@using MovieMvcProject.Web.Areas.Admin.Resources
+@model MovieMvcProject.Web.Models.ActorEditViewModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<AdminActorDirectorResource> ActorLocalizer
+
+<div class="bg-white dark:bg-surface-dark rounded-3xl border border-slate-200 dark:border-white/10 flex flex-col shadow-sm actor-filmography-container">
+    <div class="px-8 py-6 border-b border-slate-200 dark:border-white/10 flex items-center justify-between bg-slate-50/50 dark:bg-white/5 rounded-t-3xl">
+        <h2 class="flex items-center gap-3 text-xl font-bold text-slate-900 dark:text-white">
+            <span class="material-icons-outlined text-[#8B5CF6]">movie_filter</span>
+            @string.Format(ActorLocalizer["Edit.Filmography"], Model.Movies?.Count ?? 0)
+        </h2>
+    </div>
+    <div class="flex-1 overflow-auto">
+        <table class="w-full">
+            <thead class="sticky top-0 bg-white dark:bg-surface-dark z-10 border-b border-slate-200 dark:border-white/10">
+                <tr>
+                    <th class="px-8 py-4 text-left font-semibold text-slate-500 dark:text-gray-400">@ActorLocalizer["Edit.FilmColumn"]</th>
+                    <th class="px-8 py-4 text-right font-semibold text-slate-500 dark:text-gray-400 w-20">@ActorLocalizer["Edit.ActionColumn"]</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-white/10">
+                @if (Model.Movies != null && Model.Movies.Any())
+                {
+                    foreach (var movie in Model.Movies)
+                    {
+                        <tr class="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
+                            <td class="px-8 py-4">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-16 flex-shrink-0 bg-slate-200 dark:bg-zinc-800 rounded-lg overflow-hidden shadow-sm">
+                                        <img src="@(string.IsNullOrEmpty(movie.PosterUrl) ? "profile-images/default-profile.png" : movie.PosterUrl)"
+                                             class="w-full h-full object-cover" alt="Poster" />
+                                    </div>
+                                    <div>
+                                        <div class="font-semibold text-slate-900 dark:text-white group-hover:text-[#8B5CF6] transition-colors">@movie.Title</div>
+                                        <div class="text-xs text-slate-500 font-medium">@movie.Year</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-right px-8">
+                                <button type="button" onclick="removeMovieFromActor('@Model.ActorId', '@movie.MovieId', '@ActorLocalizer["Edit.RemoveMovieConfirm"]')"
+                                        class="text-slate-400 hover:text-red-500 p-2 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all">
+                                    <span class="material-icons-outlined">delete</span>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="2" class="text-center py-20 text-slate-400 font-medium">@ActorLocalizer["Edit.NoMovies"]</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

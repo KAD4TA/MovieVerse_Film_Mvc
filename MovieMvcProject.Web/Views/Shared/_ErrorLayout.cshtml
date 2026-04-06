@@ -1,0 +1,86 @@
+﻿@using Microsoft.Extensions.Localization
+@using System.Globalization
+@using MovieMvcProject.Domain.Resources
+@inject IStringLocalizer<MovieMvcProject.Domain.Resources.ExceptionResource> L
+@inject IStringLocalizer<MenuResource> MenuLocalizer
+@{
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
+    var cultureName = CultureInfo.CurrentCulture.Name;
+    var viewTitle = ViewData["Title"] as string;
+    var title = string.IsNullOrWhiteSpace(viewTitle) ? "Error" : viewTitle;
+}
+<!DOCTYPE html>
+<html class="dark" lang="@(cultureName.Split('-')[0])">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@title - MovieVerse</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;700;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ea2a33",
+                        "background-dark": "#050505",
+                    },
+                    fontFamily: { "display": ["Be Vietnam Pro", "sans-serif"] }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .lang-btn {
+            display: flex; height: 2.5rem; width: 2.5rem; cursor: pointer; align-items: center; justify-content: center;
+            border-radius: 0.5rem; background-color: rgba(255, 255, 255, 0.05); transition: 150ms;
+        }
+        .lang-btn.active { background-color: rgba(234, 42, 51, 0.2); border: 2px solid #ea2a33; box-shadow: 0 0 15px rgba(234, 42, 51, 0.5); }
+    </style>
+</head>
+<body class="font-display bg-background-dark text-gray-200 overflow-hidden">
+    <div class="relative flex h-screen w-full flex-col">
+        @* Arka Plan Efekti *@
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,42,51,0.12)_0%,transparent_75%)]"></div>
+
+        <div class="relative z-10 flex flex-col h-full max-w-6xl mx-auto w-full px-6">
+            @* HEADER *@
+            <header class="flex shrink-0 items-center justify-between py-6">
+                <div class="group flex items-center gap-3">
+                    <span class="material-symbols-outlined !text-4xl text-primary group-hover:rotate-12 transition-transform duration-300">movie</span>
+                    <h2 class="text-2xl font-black tracking-tighter text-white">MovieVerse</h2>
+                </div>
+                
+                <form action="/Language/SetLanguage" method="post" class="flex gap-2">
+                    <input type="hidden" name="returnUrl" value="@returnUrl" />
+                    @Html.AntiForgeryToken()
+                    <button type="submit" name="culture" value="tr-TR" class="lang-btn @(cultureName == "tr-TR" ? "active" : "")">
+                        <img src="https://flagcdn.com/w80/tr.png" width="24" alt="TR" />
+                    </button>
+                    <button type="submit" name="culture" value="en-US" class="lang-btn @(cultureName == "en-US" ? "active" : "")">
+                        <img src="https://flagcdn.com/w80/us.png" width="24" alt="EN" />
+                    </button>
+                </form>
+            </header>
+
+            @* MAIN CONTENT *@
+            <main class="flex-1 flex flex-col items-center justify-center text-center">
+                @RenderBody()
+
+                @* Partial View - Butonlar *@
+                @await Html.PartialAsync("_ErrorActions")
+            </main>
+
+            
+            <footer class="flex shrink-0 flex-col items-center justify-center py-8 border-t border-white/5">
+                <p class="text-[11px] font-black text-gray-600 uppercase tracking-[0.4em]">
+                    @MenuLocalizer["CopyrightFooter", DateTime.Now.Year]
+                </p>
+            </footer>
+        </div>
+    </div>
+</body>
+</html>

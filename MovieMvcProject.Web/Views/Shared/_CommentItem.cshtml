@@ -1,0 +1,133 @@
+﻿@using Microsoft.Extensions.Localization
+@using MovieMvcProject.Domain.Enums
+@using MovieMvcProject.Domain.Resources
+@using System.Security.Claims
+@model MovieMvcProject.Application.DTOs.ResponseDto.CommentDtoResponse
+@inject IStringLocalizer<CommentResource> Localizer
+
+@{
+    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var isAdmin = User.IsInRole("Admin");
+    var isOwner = Model.UserId.ToString() == currentUserId;
+    var canSeeStatus = isOwner || isAdmin;
+
+    var isPending = Model.Status == CommentStatus.Pending;
+    var isApproved = Model.Status == CommentStatus.Approved;
+    var isRejected = Model.Status == CommentStatus.Rejected;
+
+    string statusClass = "border-white/5";
+    string ringClass = "ring-white/5";
+    if (canSeeStatus)
+    {
+        if (isPending) { statusClass = "border-yellow-500/50 bg-yellow-500/5"; ringClass = "ring-yellow-500/30"; }
+        else if (isApproved) { statusClass = "border-emerald-500/50 bg-emerald-500/5"; ringClass = "ring-emerald-500/30"; }
+        else if (isRejected) { statusClass = "border-red-500/50 bg-red-500/5"; ringClass = "ring-red-500/30"; }
+    }
+}
+
+<div class="comment-item border-l-2 @statusClass pl-4 my-6 transition-all" id="comment-@Model.CommentId">
+    <div class="flex gap-4">
+        <div class="relative">
+            <img src="@(Model.UserProfileImageUrl ?? "/profile-images/default-profile.jpg")"
+                 class="w-10 h-10 rounded-full object-cover ring-2 @ringClass"
+                 onerror="this.src='/images/default-avatar.png'" />
+            @if (canSeeStatus)
+            {
+                if (isPending)
+                {
+                    <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"></span>
+                    </span>
+                }
+                else if (isRejected)
+                {
+                    <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                    </span>
+                }
+            }
+        </div>
+        <div class="flex-1">
+            <div class="flex items-center justify-between mb-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <h4 class="font-bold text-sm @(isOwner ? "text-blue-400" : "text-gray-200")">
+                        <a asp-controller="Account" asp-action="PublicProfile" asp-route-id="@Model.UserId"
+                           class="hover:underline hover:text-white transition-colors">
+                            @Model.Username @(isOwner? Localizer["You"] : "")
+                        </a>
+                    </h4>
+                    @if (canSeeStatus)
+                    {
+                        if (isPending)
+                        {
+                            <span class="text-[9px] bg-yellow-500/20 text-yellow-500 px-2 py-0.5 rounded uppercase font-black tracking-tighter">@Localizer["Pending"]</span>
+                        }
+                        else if (isApproved)
+                        {
+
+                            <span class="text-[9px] bg-emerald-500/20 text-emerald-500 px-2 py-0.5 rounded uppercase font-black tracking-tighter">@Localizer["Approved"]</span>
+                        }
+                        else if (isRejected)
+                        {
+
+                            <span class="text-[9px] bg-red-500/20 text-red-500 px-2 py-0.5 rounded uppercase font-black tracking-tighter">@Localizer["Rejected"]</span>
+                        }
+                    }
+                    <span class="text-[10px] text-gray-500 font-medium">
+                        <span class="material-symbols-outlined text-[12px] align-middle">schedule</span>
+                        @Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")
+                    </span>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    @if (Model.MovieReview.HasValue && Model.MovieReview > 0)
+                    {
+                        <div class="flex items-center gap-0.5 bg-white/5 px-2 py-1 rounded border border-white/5">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <span class="material-symbols-outlined text-[14px] @(i <= Model.MovieReview.Value ? "text-yellow-500" : "text-gray-700")"
+                                      style="font-variation-settings: 'FILL' @(i <= Model.MovieReview.Value ? "1" : "0")">star</span>
+                            }
+                        </div>
+                    }
+                    @if (isOwner || isAdmin)
+                    {
+                        <div class="flex gap-2 border-l border-white/10 pl-2">
+                            <button onclick="editComment('@Model.CommentId')" class="text-gray-500 hover:text-blue-400 transition">
+                                <span class="material-symbols-outlined text-sm">edit</span>
+                            </button>
+                            <button onclick="deleteComment('@Model.CommentId')" class="text-gray-500 hover:text-red-500 transition">
+                                <span class="material-symbols-outlined text-sm">delete</span>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="@(isRejected && canSeeStatus ? "opacity-50 strike-through" : "")">
+                <p class="text-gray-300 text-sm leading-relaxed mb-2">@Model.Content</p>
+            </div>
+
+            @if (isApproved)
+            {
+                <div class="flex items-center gap-4">
+                    <button onclick="openReplyModal('@Model.CommentId', '@Html.Raw(Model.Username.Replace("'", "\\'"))')"
+                            class="text-[11px] font-black uppercase tracking-wider text-gray-500 hover:text-blue-400 transition-colors flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">reply</span> @Localizer["Reply"]
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (Model.Replies != null && Model.Replies.Any())
+    {
+        <div class="replies-container ml-6 mt-4 space-y-4 border-l border-white/5 pl-4">
+            @foreach (var reply in Model.Replies)
+            {
+                <partial name="_CommentItem" model="reply" />
+            }
+        </div>
+    }
+</div>

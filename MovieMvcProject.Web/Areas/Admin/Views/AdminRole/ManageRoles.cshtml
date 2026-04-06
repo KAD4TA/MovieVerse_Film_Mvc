@@ -1,0 +1,20 @@
+﻿@using Microsoft.Extensions.Localization
+@using MovieMvcProject.Web.Areas.Admin.Resources
+@model MovieMvcProject.Web.Areas.Admin.Models.ManageRolesViewModel
+@inject IStringLocalizer<AdminRoleResource> Localizer
+
+@{
+    ViewData["Title"] = Localizer["PageTitle"] + " - " + Model.UserName;
+    Layout = "_LayoutAdmin";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/adminrolemanage/adminrolemanage.css" />
+}
+
+@* Partial'ı çağırıyoruz *@
+<partial name="AdminRoleManage/_ManageRolesPartial" model="Model" />
+
+@section Scripts {
+    <script src="~/js/adminrolemanage/adminrolemanage.js"></script>
+}

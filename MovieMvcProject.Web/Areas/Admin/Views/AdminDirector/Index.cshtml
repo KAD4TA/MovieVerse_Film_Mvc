@@ -1,0 +1,15 @@
+﻿@model MovieMvcProject.Application.Commons.PagedResult<MovieMvcProject.Web.Models.DirectorLookupViewModel>
+@using MovieMvcProject.Application.Commons
+@using MovieMvcProject.Web.Areas.Admin.Resources
+@inject Microsoft.Extensions.Localization.IStringLocalizer<AdminActorDirectorResource> DirectorLocalizer
+@{
+    ViewData["Title"] = DirectorLocalizer["Director.List.Title"];
+    Layout = "_LayoutAdmin";
+   
+}
+<partial name="AdminDirector/_DirectorListPartial" model="Model" />
+<partial name="AdminDirector/_DirectorDeleteModalPartial" />
+
+@section Scripts {
+    <script src="~/js/admindirector/admindirector-index.js" asp-append-version="true"></script>
+}

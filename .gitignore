@@ -1,0 +1,46 @@
+## [.NET / Visual Studio]
+bin/
+obj/
+out/
+.vs/
+.vscode/
+TestResults/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## [Build & Publishing]
+publish/
+appsettings.Development.json
+appsettings.Local.json
+
+## [Databases & Local Secrets]
+*.db
+*.db-shm
+*.db-wal
+*.mdf
+*.ldf
+
+## [Node / Tailwind CSS]
+node_modules/
+.npm/
+npm-debug.log*
+.eslintcache
+.stylelintcache
+
+## [Docker & Container Data]
+.dockerignore
+docker-compose.override.yml*
+*.env
+
+elasticsearch_data/
+redis_data/
+/data/
+Logs/
+Logs/*.txt
+*.log
+
+## [OS Specific]
+.DS_Store
+Thumbs.db

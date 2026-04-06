@@ -1,0 +1,17 @@
+﻿@using MovieMvcProject.Domain.Resources
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<AIResource> AIResourceLocalizer
+@{
+    ViewData["Title"] = AIResourceLocalizer["Title"].Value;
+    Layout = "_Layout";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/ai/ai-assistant.css" asp-append-version="true" />
+}
+
+<partial name="AIAssistant/_AIAssistantPartial" />
+
+@section Scripts {
+    <script src="~/js/ai/ai-assistant.js" asp-append-version="true"></script>
+}

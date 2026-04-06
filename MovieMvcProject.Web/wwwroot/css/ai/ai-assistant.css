@@ -1,0 +1,49 @@
+﻿
+.suggestion-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    background-color: #1a0b0c;
+    border: 1px solid #472426;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: #d1d5db;
+}
+
+    .suggestion-chip:hover {
+        border-color: rgba(234, 42, 51, 0.5);
+        background-color: rgba(26, 11, 12, 0.8);
+        color: white;
+    }
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scroll-smooth {
+    scroll-behavior: smooth;
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,86 @@
+﻿@model MovieMvcProject.Web.Models.UserPageViewModel
+@using Microsoft.Extensions.Localization
+@using MovieMvcProject.Domain.Resources
+@inject IStringLocalizer<UserResource> Localizer
+
+@{
+    ViewData["Title"] = Model.FullName + Localizer["ProfileTitleSuffix"];
+    Layout = "_Layout";
+}
+
+<div class="max-w-5xl mx-auto px-4 py-8">
+    <!-- Profil Header -->
+    <div class="flex flex-col md:flex-row gap-8 items-center md:items-start bg-zinc-900 rounded-3xl p-8">
+        <img src="@(Model.ProfileImageUrl ?? "/profile-images/default-profile.jpg")"
+             class="w-32 h-32 rounded-2xl object-cover ring-4 ring-white/10"
+             onerror="this.src='/images/default-avatar.png'" />
+        <div class="flex-1 text-center md:text-left">
+            <h1 class="text-4xl font-bold">@Model.FullName</h1>
+            <div class="flex gap-6 mt-6 justify-center md:justify-start">
+                @if (!string.IsNullOrEmpty(Model.InstagramUrl))
+                {
+                    <a href="@Model.InstagramUrl" target="_blank"
+                       class="flex items-center gap-2 text-pink-400 hover:text-pink-300 transition">
+                        <span class="material-symbols-outlined text-2xl">photo_camera</span>
+                        <span class="font-medium">@Localizer["InstagramLabel"]</span>
+                    </a>
+                }
+                @if (!string.IsNullOrEmpty(Model.TwitterUrl))
+                {
+                    <a href="@Model.TwitterUrl" target="_blank"
+                       class="flex items-center gap-2 text-sky-400 hover:text-sky-300 transition">
+                        <span class="material-symbols-outlined text-2xl">share</span>
+                        <span class="font-medium">@Localizer["TwitterLabel"]</span>
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Wishlist Section -->
+    <div class="mt-12">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-semibold flex items-center gap-3">
+                <span class="material-symbols-outlined">bookmark</span>
+                @Localizer["WishlistHeader", Model.Wishlists.TotalCount]
+            </h2>
+        </div>
+
+        @if (Model.Wishlists.Items.Any())
+        {
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+                @foreach (var item in Model.Wishlists.Items)
+                {
+                    <div class="group bg-zinc-900 rounded-2xl overflow-hidden hover:scale-105 transition">
+                        <a asp-controller="Movie"
+                           asp-action="MovieDetail"
+                           asp-route-id="@item.Movie.MovieId"
+                           class="block">
+                            <img src="@item.Movie.PosterUrl"
+                                 class="w-full aspect-[2/3] object-cover"
+                                 alt="@item.Movie.Title" />
+                        </a>
+                        <div class="p-4">
+                            <h3 class="font-semibold line-clamp-2">@item.Movie.Title</h3>
+                            <p class="text-sm text-gray-400">@item.Movie.Year</p>
+                            <p class="text-xs text-emerald-400 mt-2">
+                                @item.AddedAt.ToString("dd MMM yyyy")
+                            </p>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex justify-center mt-10">
+                @await Html.PartialAsync("_Pagination", Model.Wishlists)
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-20 text-gray-500">
+                @Localizer["NoWishlistMessage"]
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,10 @@
+﻿
+
+.scroll-smooth {
+    scroll-behavior: smooth;
+}
+
+#trendingList {
+    mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+}

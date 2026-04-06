@@ -1,0 +1,10 @@
+﻿
+body.no-scroll {
+    overflow: hidden;
+}
+
+
+.actor-filmography-container {
+    min-height: 400px;
+    max-height: 650px;
+}

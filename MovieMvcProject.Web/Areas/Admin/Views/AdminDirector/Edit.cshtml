@@ -1,0 +1,19 @@
+﻿@using MovieMvcProject.Web.Areas.Admin.Models
+@using MovieMvcProject.Web.Areas.Admin.Resources
+@model DirectorEditViewModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<AdminActorDirectorResource> DirectorLocalizer
+@{
+    ViewData["Title"] = DirectorLocalizer["Director.Edit.Title"];
+    Layout = "_LayoutAdmin";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admindirector/admindirector-custom.css" />
+}
+
+<partial name="AdminDirector/_DirectorEditPartial" model="Model" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/admindirector/admindirector-edit.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,76 @@
+﻿@model MovieMvcProject.Web.Models.LoginViewModel
+@using System.Globalization
+@using System.Text
+@inject MovieMvcProject.Application.Interfaces.ILocalization.ILocalizationService Loc
+
+@{
+    Layout = null;
+    var request = ViewContext.HttpContext.Request;
+    var path = request.Path.ToString();
+    var queryDict = request.Query.ToDictionary(q => q.Key, q => q.Value.ToString());
+    if (!string.IsNullOrEmpty(Model?.Email)) queryDict["email"] = Model.Email;
+    
+    var sb = new StringBuilder();
+    foreach (var kvp in queryDict)
+    {
+        if (sb.Length > 0) sb.Append("&");
+        sb.Append($"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value)}");
+    }
+    var returnUrl = sb.Length > 0 ? $"{path}?{sb}" : path;
+    var cultureName = CultureInfo.CurrentCulture.Name ?? "tr-TR";
+    var langCode = (cultureName.Split('-')[0] ?? "tr").ToLowerInvariant();
+}
+
+<!DOCTYPE html>
+<html lang="@langCode" class="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@Loc.GetLocalizedHtmlString("RegisterResource", "LoginLink") - MovieVerse</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="stylesheet" href="~/css/login/login-style.css" asp-append-version="true" />
+    <script src="~/js/login/login-script.js" asp-append-version="true"></script>
+</head>
+<body class="bg-bg-dark font-display text-bg-light">
+    <div class="relative min-h-screen w-full overflow-hidden">
+        <div class="absolute inset-0 z-0 bg-cover bg-center login-bg-overlay"></div>
+
+        <div class="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col px-6">
+            <header class="flex items-center justify-between py-6">
+                <a asp-controller="Movie" asp-action="Index" class="group flex items-center gap-2.5">
+                    <span class="material-symbols-outlined !text-4xl text-primary transition-transform duration-300 group-hover:rotate-12">movie</span>
+                    <h2 class="text-2xl font-black tracking-tighter uppercase leading-none">
+                        <span class="text-white">Movie</span><span class="text-primary">Verse</span>
+                    </h2>
+                </a>
+                
+                @* Dil Seçimi *@
+                <form asp-controller="Language" asp-action="SetLanguage" method="post" class="flex gap-2">
+                    <input type="hidden" name="returnUrl" value="@returnUrl" />
+                    @Html.AntiForgeryToken()
+                    <button name="culture" value="tr-TR" class="rounded-full p-1 ring-1 ring-primary/30 hover:bg-primary/10 @(cultureName == "tr-TR" ? "bg-primary/20" : "")">
+                        <img src="https://flagcdn.com/w40/tr.png" width="28" alt="TR" />
+                    </button>
+                    <button name="culture" value="en-US" class="rounded-full p-1 ring-1 ring-primary/30 hover:bg-primary/10 @(cultureName == "en-US" ? "bg-primary/20" : "")">
+                        <img src="https://flagcdn.com/w40/us.png" width="28" alt="EN" />
+                    </button>
+                </form>
+            </header>
+
+            <main class="flex flex-1 items-center justify-center py-12">
+               
+                <partial name="Account/_LoginPartial" model="Model" />
+            </main>
+        </div>
+    </div>
+
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+</body>
+</html>

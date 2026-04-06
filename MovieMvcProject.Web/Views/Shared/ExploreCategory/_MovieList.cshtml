@@ -1,0 +1,113 @@
+﻿@using MovieMvcProject.Application.Commons
+@using MovieMvcProject.Application.DTOs.ResponseDto
+@using Microsoft.AspNetCore.Mvc.Localization
+@using MovieMvcProject.Domain.Resources
+@using Microsoft.Extensions.Localization
+
+@model PagedResult<MovieDtoResponse>
+@inject IStringLocalizer<EnumResource> EnumLocalizer
+@inject IStringLocalizer<MovieResource> MovieLocalizer
+
+@{
+    var selectedCategory = ViewData["SelectedCategory"]?.ToString() ?? string.Empty;
+    var currentPage = Model?.PageNumber ?? 1;
+    var totalPages = Model?.TotalPages ?? 1;
+    
+    var categoryDisplayName = !string.IsNullOrEmpty(selectedCategory)
+        ? EnumLocalizer[$"Category_{selectedCategory}"]
+        : MovieLocalizer["Explorer"];
+}
+
+<section class="max-w-7xl mx-auto">
+    <div class="flex items-end justify-between mb-12">
+        <div>
+            <h2 class="text-2xl font-bold flex items-center gap-3 uppercase">
+                <span class="w-2 h-8 bg-blue-600 rounded-full"></span>
+                @(string.IsNullOrEmpty(selectedCategory) ? MovieLocalizer["Trending"] : categoryDisplayName)
+            </h2>
+        </div>
+        <span class="text-blue-400 text-sm font-medium">
+            @Model?.TotalCount @MovieLocalizer["ResultsFound"]
+        </span>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-8 gap-y-12">
+        @if (Model?.Items != null && Model.Items.Any())
+        {
+            @foreach (var movie in Model.Items)
+            {
+                <div class="movie-card group cursor-pointer clickable-card"
+                     data-url="@Url.Action("MovieDetail", "Movie", new { id = movie.MovieId })">
+                    <div class="movie-poster-container relative aspect-[2/3] mb-4 border border-white/5">
+                        <img src="@(string.IsNullOrEmpty(movie.PosterUrl) ? "/images/no-poster.jpg" : movie.PosterUrl)"
+                             alt="@movie.Title"
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
+                        <div class="absolute top-3 right-3">
+                            <div class="custom-badge px-2 py-1 rounded text-[10px] font-bold text-white/80 uppercase tracking-wider">
+                                @EnumLocalizer[$"Category_{movie.Category}"]
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <button class="w-full py-2 bg-white text-black text-xs font-bold rounded-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                                @MovieLocalizer["WatchNow"]
+                            </button>
+                        </div>
+                    </div>
+                    <div class="px-1">
+                        <h4 class="font-bold text-lg leading-tight text-white/90 group-hover:text-blue-400 transition-colors truncate">
+                            @movie.Title
+                        </h4>
+                        <div class="flex items-center justify-between mt-2">
+                            <span class="text-[12px] text-gray-500 font-medium">@movie.Year</span>
+                            <div class="flex items-center gap-1">
+                                <span class="material-symbols-outlined text-yellow-400 text-[16px] fill-1">star</span>
+                                <span class="text-yellow-400 text-sm font-bold">@movie.Rating.ToString("F1")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-span-full py-32 bg-white/5 rounded-3xl border border-dashed border-white/10 text-center">
+                <span class="material-symbols-outlined text-6xl text-gray-700 mb-4">search_off</span>
+                <p class="text-gray-500">@MovieLocalizer["NoMoviesFound"]</p>
+            </div>
+        }
+    </div>
+
+    @if (totalPages > 1)
+    {
+        <div class="mt-24 flex justify-center items-center gap-3 flex-wrap">
+            <a href="@Url.Action("ExploreCategory", "Movie", new { category = selectedCategory, pageNumber = currentPage - 1 })"
+                   class="page-link-custom @(currentPage <= 1 ? "disabled" : "")">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </a>
+
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                if (i == 1 || i == totalPages || (i >= currentPage - 2 && i <= currentPage + 2))
+                {
+                    <a href="@Url.Action("ExploreCategory", "Movie", new { category = selectedCategory, pageNumber = i })"
+                           class="page-link-custom @(i == currentPage ? "active" : "")">
+                        @i
+                    </a>
+                }
+                else if (i == currentPage - 3 || i == currentPage + 3)
+                {
+                    <span class="text-gray-600 px-2">…</span>
+                }
+            }
+
+            <a href="@Url.Action("ExploreCategory", "Movie", new { category = selectedCategory, pageNumber = currentPage + 1 })"
+                   class="page-link-custom @(currentPage >= totalPages ? "disabled" : "")">
+                <span class="material-symbols-outlined">chevron_right</span>
+            </a>
+
+            <span class="ml-6 text-sm text-gray-400 font-medium">
+                @currentPage / @totalPages
+            </span>
+        </div>
+    }
+</section>

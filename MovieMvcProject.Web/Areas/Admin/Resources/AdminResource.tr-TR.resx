@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- Microsoft ResX Schema Version 1.3 -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>1.3</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Movie General -->
+  <data name="Movie.Form.Title.Edit" xml:space="preserve"><value>Filmi Düzenle</value></data>
+  <data name="Movie.Form.Title.Create" xml:space="preserve"><value>Yeni Film Ekle</value></data>
+  <data name="Breadcrumb.Admin" xml:space="preserve"><value>Admin</value></data>
+  <data name="Breadcrumb.Movies" xml:space="preserve"><value>Filmler</value></data>
+  <data name="Button.Cancel" xml:space="preserve"><value>İptal</value></data>
+  <data name="Button.Save" xml:space="preserve"><value>Kaydet</value></data>
+  <data name="Button.Update" xml:space="preserve"><value>Güncelle</value></data>
+
+  <!-- Content Section -->
+  <data name="Section.TranslationAndContent" xml:space="preserve"><value>Çeviri &amp; İçerik</value></data>
+  <data name="Label.TurkishTitle" xml:space="preserve"><value>Film Başlığı (Türkçe)</value></data>
+  <data name="Placeholder.ExampleBaslangic" xml:space="preserve"><value>Örn: Başlangıç</value></data>
+  <data name="Label.TurkishDescription" xml:space="preserve"><value>Açıklama (Türkçe)</value></data>
+  <data name="Label.EnglishTitle" xml:space="preserve"><value>Film Başlığı (İngilizce)</value></data>
+  <data name="Placeholder.ExampleInception" xml:space="preserve"><value>Örn: Inception</value></data>
+  <data name="Label.EnglishDescription" xml:space="preserve"><value>Açıklama (İngilizce)</value></data>
+
+  <!-- Technical Details -->
+  <data name="Section.TechnicalDetails" xml:space="preserve"><value>Teknik Detaylar</value></data>
+  <data name="Label.Category" xml:space="preserve"><value>Kategori</value></data>
+  <data name="Option.Select" xml:space="preserve"><value>Seçiniz</value></data>
+  <data name="Label.ProductionYear" xml:space="preserve"><value>Yapım Yılı</value></data>
+  <data name="Label.DurationMinutes" xml:space="preserve"><value>Süre (Dk)</value></data>
+  <data name="Label.ImdbRating" xml:space="preserve"><value>IMDB Puanı</value></data>
+  <data name="Label.TrailerUrl" xml:space="preserve"><value>Fragman URL</value></data>
+
+  <!-- Director -->
+  <data name="Section.Director" xml:space="preserve"><value>Yönetmen</value></data>
+  <data name="Placeholder.DirectorSearch" xml:space="preserve"><value>Yönetmen ara...</value></data>
+  <data name="Text.NewRecordFor" xml:space="preserve"><value>için yeni kayıt oluştur</value></data>
+  <data name="Section.NewDirector" xml:space="preserve"><value>Yeni Yönetmen</value></data>
+  <data name="Placeholder.FullName" xml:space="preserve"><value>Ad Soyad</value></data>
+  <data name="Placeholder.PhotoUrl" xml:space="preserve"><value>Fotoğraf URL</value></data>
+  <data name="Placeholder.BirthPlace" xml:space="preserve"><value>Doğum Yeri</value></data>
+  <data name="Placeholder.HeightCm" xml:space="preserve"><value>Boy (cm)</value></data>
+  <data name="Button.PrepareForSystem" xml:space="preserve"><value>Sisteme Hazırla</value></data>
+
+  <!-- Actors -->
+  <data name="Section.Actors" xml:space="preserve"><value>Oyuncular</value></data>
+  <data name="Placeholder.ActorSearch" xml:space="preserve"><value>Oyuncu ara...</value></data>
+  <data name="Section.NewActorCard" xml:space="preserve"><value>Yeni Oyuncu Kartı Oluştur</value></data>
+  <data name="Placeholder.ActorName" xml:space="preserve"><value>Oyuncu Adı</value></data>
+  <data name="Button.AddToList" xml:space="preserve"><value>Listeye Ekle</value></data>
+
+  <!-- Poster -->
+  <data name="Section.MoviePoster" xml:space="preserve"><value>Film Posteri</value></data>
+  <data name="Text.PreviewNotAvailable" xml:space="preserve"><value>Önizleme Yok</value></data>
+  <data name="Text.PreviewAutoUpdate" xml:space="preserve"><value>URL girildiğinde önizleme otomatik güncellenir.</value></data>
+  <data name="Text.ChangeImage" xml:space="preserve"><value>Görseli Değiştir</value></data>
+
+  <!-- User Delete -->
+  <data name="User.Delete.Title" xml:space="preserve"><value>Kullanıcı Sil</value></data>
+  <data name="User.Delete.Confirmation" xml:space="preserve"><value>Kullanıcı Silme Onayı</value></data>
+  <data name="Text.CriticalOperation" xml:space="preserve"><value>Kritik İşlem</value></data>
+  <data name="Text.Warning" xml:space="preserve"><value>Uyarı:</value></data>
+  <data name="User.Delete.WarningMessage" xml:space="preserve"><value>Bu kullanıcıyı sildiğinizde, kullanıcıya ait tüm yorumlar, beğeniler ve profil verileri sistemden kalıcı olarak temizlenecektir. Bu işlem geri döndürülemez.</value></data>
+  <data name="Button.YesDeleteUser" xml:space="preserve"><value>Evet, Kullanıcıyı Sil</value></data>
+
+  <!-- User Edit -->
+  <data name="User.Edit.Title" xml:space="preserve"><value>Kullanıcı Profilini Düzenle</value></data>
+  <data name="User.Edit.ProfilePhoto" xml:space="preserve"><value>Profil Fotoğrafı</value></data>
+  <data name="Text.ClickToChangePhoto" xml:space="preserve"><value>Değiştirmek için resmin üzerine tıklayın</value></data>
+  <data name="Section.AccountIdentity" xml:space="preserve"><value>Hesap Kimliği</value></data>
+  <data name="Label.FullName" xml:space="preserve"><value>Tam İsim</value></data>
+  <data name="Label.Email" xml:space="preserve"><value>E-Posta Adresi</value></data>
+  <data name="Section.PersonalInfo" xml:space="preserve"><value>Kişisel Bilgiler</value></data>
+  <data name="Label.Gender" xml:space="preserve"><value>Cinsiyet</value></data>
+  <data name="Label.BirthDate" xml:space="preserve"><value>Doğum Tarihi</value></data>
+  <data name="Label.Instagram" xml:space="preserve"><value>Instagram</value></data>
+  <data name="Label.Twitter" xml:space="preserve"><value>X (Twitter)</value></data>
+  <data name="Button.Reset" xml:space="preserve"><value>Sıfırla</value></data>
+  <data name="Button.SaveChanges" xml:space="preserve"><value>Güncellemeyi Tamamla</value></data>
+
+  <!-- List Pages -->
+  <data name="Common.BackToList" xml:space="preserve"><value>Listeye Dön</value></data>
+  <data name="MovieList.Title" xml:space="preserve"><value>Film Listesi</value></data>
+  <data name="UserList.Title" xml:space="preserve"><value>Kullanıcı Yönetimi</value></data>
+  <data name="Common.SearchPlaceholder" xml:space="preserve"><value>Ara...</value></data>
+  <data name="Common.AddNew" xml:space="preserve"><value>Yeni Ekle</value></data>
+  <data name="Common.Edit" xml:space="preserve"><value>Düzenle</value></data>
+  <data name="Common.Delete" xml:space="preserve"><value>Sil</value></data>
+  <data name="Common.NoDataFound" xml:space="preserve"><value>Veri bulunamadı</value></data>
+  <data name="Common.Actions" xml:space="preserve"><value>Aksiyonlar</value></data>
+  <data name="Common.Users" xml:space="preserve"><value>Kullanıcı</value></data>
+  <data name="Common.Page" xml:space="preserve"><value>Sayfa</value></data>
+
+  <!-- MovieList Specific -->
+  <data name="AllMovies" xml:space="preserve"><value>Tüm Filmler</value></data>
+  <data name="TotalFound" xml:space="preserve"><value>Toplam Bulunan</value></data>
+  <data name="PosterLabel" xml:space="preserve"><value>Poster</value></data>
+  <data name="TitleLabel" xml:space="preserve"><value>Başlık</value></data>
+  <data name="YearLabel" xml:space="preserve"><value>Yıl</value></data>
+  <data name="RatingLabel" xml:space="preserve"><value>Puan</value></data>
+  <data name="CategoryLabel" xml:space="preserve"><value>Kategori</value></data>
+  <data name="ActionsLabel" xml:space="preserve"><value>İşlemler</value></data>
+  <data name="DeleteConfirmTitle" xml:space="preserve"><value>Silme Onayı</value></data>
+  <data name="DeleteConfirmDescription" xml:space="preserve"><value>Bu filmi silmek istediğinizden emin misiniz?</value></data>
+  <data name="DeleteConfirmAction" xml:space="preserve"><value>Sil</value></data>
+
+  <!-- === DASHBOARD LOCALIZATION === -->
+  <data name="Dashboard.Title" xml:space="preserve"><value>Yönetici Paneli</value></data>
+  <data name="Dashboard.WelcomeBack" xml:space="preserve"><value>Tekrardan Hoşgeldiniz,</value></data>
+  <data name="Dashboard.TotalMovies" xml:space="preserve"><value>Toplam Film</value></data>
+  <data name="Dashboard.TotalUsers" xml:space="preserve"><value>Toplam Kullanıcı</value></data>
+  <data name="Dashboard.TotalVisitors" xml:space="preserve"><value>Toplam Ziyaretçi</value></data>
+  <data name="Dashboard.NewMember" xml:space="preserve"><value>Yeni Üye</value></data>
+  <data name="Dashboard.LatestFeedback" xml:space="preserve"><value>En Son Geri Bildirim</value></data>
+  <data name="Dashboard.AnalyticsOverview" xml:space="preserve"><value>Analitik Genel Bakış</value></data>
+  <data name="Dashboard.Users" xml:space="preserve"><value>KULLANICILAR</value></data>
+  <data name="Dashboard.Visitors" xml:space="preserve"><value>ZİYARETÇİLER</value></data>
+  <data name="Dashboard.Days7" xml:space="preserve"><value>7G</value></data>
+  <data name="Dashboard.Days30" xml:space="preserve"><value>30G</value></data>
+  <data name="Dashboard.Days365" xml:space="preserve"><value>1Y</value></data>
+  <data name="Dashboard.Report" xml:space="preserve"><value>Rapor</value></data>
+  <data name="Dashboard.GenreDistribution" xml:space="preserve"><value>Film Tür Dağılımı</value></data>
+  <data name="Dashboard.RecentSystemLogs" xml:space="preserve"><value>Son Sistem Kayıtları</value></data>
+  <data name="Dashboard.ViewAll" xml:space="preserve"><value>Tümünü Gör</value></data>
+  <data name="Dashboard.Timestamp" xml:space="preserve"><value>Zaman Damgası</value></data>
+  <data name="Dashboard.Level" xml:space="preserve"><value>Seviye</value></data>
+  <data name="Dashboard.EventMessage" xml:space="preserve"><value>Olay Mesajı</value></data>
+  <data name="Dashboard.AnalyticsReport" xml:space="preserve"><value>Analitik Raporu</value></data>
+  <data name="Dashboard.DownloadXLSX" xml:space="preserve"><value>XLSX İndir</value></data>
+  <data name="Dashboard.Close" xml:space="preserve"><value>Kapat</value></data>
+  <data name="Dashboard.ReportFor" xml:space="preserve"><value>Rapor için:</value></data>
+  <data name="Dashboard.Date" xml:space="preserve"><value>Tarih</value></data>
+  <data name="Dashboard.Count" xml:space="preserve"><value>Sayı</value></data>
+  <data name="Dashboard.Film" xml:space="preserve"><value>Film</value></data>
+  <data name="Dashboard.User" xml:space="preserve"><value>Kullanıcı</value></data>
+  <data name="Dashboard.ScrollZoomPan" xml:space="preserve"><value>Yakınlaştır</value></data>
+  <data name="Dashboard.IPAddress" xml:space="preserve"><value>IP Adresi</value></data>
+  <data name="Dashboard.Device" xml:space="preserve"><value>Cihaz</value></data>
+  <data name="Dashboard.Footer" xml:space="preserve"><value>MovieVerse-Yönetici Paneli — Kadir Çalışkan | MIT Lisanslı</value></data>
+
+  <!-- UserList Specific -->
+  <data name="UserList.UserInfo" xml:space="preserve"><value>Kullanıcı Bilgisi</value></data>
+  <data name="UserList.RoleGroup" xml:space="preserve"><value>Yetki Grubu</value></data>
+  <data name="UserList.SystemUserDatabase" xml:space="preserve"><value>Sistem Kullanıcı Veritabanı</value></data>
+
+
+<!--  LAYOUT LOCALIZATION KEYLERİ -->
+  <data name="Menu" xml:space="preserve"><value>Menü</value></data>
+  <data name="Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Movies" xml:space="preserve"><value>Filmler</value></data>
+  <data name="AddMovie" xml:space="preserve"><value>Film Ekle</value></data>
+  <data name="MovieList" xml:space="preserve"><value>Film Listesi</value></data>
+  <data name="Users" xml:space="preserve"><value>Kullanıcılar</value></data>
+  <data name="Actors" xml:space="preserve"><value>Aktörler</value></data>
+  <data name="Directors" xml:space="preserve"><value>Yönetmenler</value></data>
+  <data name="CommentModeration" xml:space="preserve"><value>Yorum Moderasyonu</value></data>
+  <data name="SystemLogs" xml:space="preserve"><value>Sistem Logları</value></data>
+  <data name="ReturnToSite" xml:space="preserve"><value>Siteye Dön</value></data>
+  <data name="SearchPlaceholder" xml:space="preserve"><value>Ara...</value></data>
+  <data name="PendingComments" xml:space="preserve"><value>Bekleyen Yorumlar</value></data>
+  <data name="ManageAll" xml:space="preserve"><value>Tümünü Yönet</value></data>
+  <data name="DarkMode" xml:space="preserve"><value>Karanlık Mod</value></data>
+  <data name="Logout" xml:space="preserve"><value>Çıkış Yap</value></data>
+  <data name="NoPending" xml:space="preserve"><value>Harika! Bekleyen yorum yok.</value></data>
+  <data name="NoSearchResults" xml:space="preserve"><value>Sonuç bulunamadı.</value></data>
+  <data name="Loading" xml:space="preserve"><value>Yükleniyor...</value></data>
+  <data name="Approve" xml:space="preserve"><value>Onayla</value></data>
+  <data name="Reject" xml:space="preserve"><value>Reddet</value></data>
+  <data name="New" xml:space="preserve"><value>Yeni</value></data>
+
+</root>

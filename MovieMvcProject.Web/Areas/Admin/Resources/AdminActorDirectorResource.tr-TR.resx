@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>1.3</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <data name="Create.Title" xml:space="preserve"><value>Yeni Aktör Ekle</value></data>
+  <data name="Create.Header" xml:space="preserve"><value>Yeni Aktör Ekle</value></data>
+  <data name="Create.NameLabel" xml:space="preserve"><value>İsim *</value></data>
+  <data name="Create.PhotoUrlLabel" xml:space="preserve"><value>Fotoğraf URL</value></data>
+  <data name="Create.BirthDateLabel" xml:space="preserve"><value>Doğum Tarihi</value></data>
+  <data name="Create.BirthPlaceLabel" xml:space="preserve"><value>Doğum Yeri</value></data>
+  <data name="Create.HeightLabel" xml:space="preserve"><value>Boy (cm)</value></data>
+  <data name="Create.SaveButton" xml:space="preserve"><value>Kaydet</value></data>
+  <data name="Create.CancelButton" xml:space="preserve"><value>İptal</value></data>
+
+  <data name="Edit.Title" xml:space="preserve"><value>Aktör Profilini Düzenle</value></data>
+  <data name="Edit.SuccessMessage" xml:space="preserve"><value>Aktör profili başarıyla güncellendi.</value></data>
+  <data name="Edit.Header" xml:space="preserve"><value>Aktör Profilini Düzenle</value></data>
+  <data name="Edit.Subtitle" xml:space="preserve"><value>Kişisel bilgileri güncelleyin ve filmografiyi yönetin.</value></data>
+  <data name="Edit.Cancel" xml:space="preserve"><value>İptal</value></data>
+  <data name="Edit.SaveChanges" xml:space="preserve"><value>Değişiklikleri Kaydet</value></data>
+  <data name="Edit.BasicInfo" xml:space="preserve"><value>Temel Bilgiler</value></data>
+  <data name="Edit.FullName" xml:space="preserve"><value>Tam İsim</value></data>
+  <data name="Edit.BirthDate" xml:space="preserve"><value>Doğum Tarihi</value></data>
+  <data name="Edit.BirthPlace" xml:space="preserve"><value>Doğum Yeri</value></data>
+  <data name="Edit.Height" xml:space="preserve"><value>Boy</value></data>
+  <data name="Edit.HeightUnit" xml:space="preserve"><value>metre</value></data>
+  <data name="Edit.Filmography" xml:space="preserve"><value>Filmografi ({0})</value></data>
+  <data name="Edit.FilmColumn" xml:space="preserve"><value>Film</value></data>
+  <data name="Edit.ActionColumn" xml:space="preserve"><value>İşlem</value></data>
+  <data name="Edit.NoMovies" xml:space="preserve"><value>Henüz eklenmiş bir film yok.</value></data>
+  <data name="Edit.ProfilePhoto" xml:space="preserve"><value>Profil Fotoğrafı</value></data>
+  <data name="Edit.PhotoUrlLabel" xml:space="preserve"><value>Fotoğraf URL</value></data>
+  <data name="Edit.MetaData" xml:space="preserve"><value>Meta Veri</value></data>
+  <data name="Edit.SystemId" xml:space="preserve"><value>Sistem ID</value></data>
+  <data name="Edit.TotalAppearances" xml:space="preserve"><value>Toplam Görünüm</value></data>
+  <data name="Edit.DeleteActor" xml:space="preserve"><value>Aktör Profilini Sil</value></data>
+  <data name="Edit.RemoveMovieConfirm" xml:space="preserve"><value>Bu filmi aktörden kaldırmak istediğinize emin misiniz?</value></data>
+
+  <data name="List.Title" xml:space="preserve"><value>Tüm Aktörler</value></data>
+  <data name="List.AllActors" xml:space="preserve"><value>Tüm Aktörler</value></data>
+  <data name="List.TotalFound" xml:space="preserve"><value>Toplam Bulunan</value></data>
+  <data name="List.SearchPlaceholder" xml:space="preserve"><value>Aktör ara...</value></data>
+  <data name="List.AddNew" xml:space="preserve"><value>Yeni Aktör Ekle</value></data>
+  <data name="List.Profile" xml:space="preserve"><value>Profil</value></data>
+  <data name="List.Name" xml:space="preserve"><value>İsim</value></data>
+  <data name="List.BirthDate" xml:space="preserve"><value>Doğum Tarihi</value></data>
+  <data name="List.MovieCount" xml:space="preserve"><value>Filmler</value></data>
+  <data name="List.Actions" xml:space="preserve"><value>İşlemler</value></data>
+  <data name="List.Page" xml:space="preserve"><value>Sayfa</value></data>
+  <data name="List.DeleteConfirmTitle" xml:space="preserve"><value>Silme Onayı</value></data>
+  <data name="List.DeleteConfirmDescription" xml:space="preserve"><value>Bu aktörü silmek istediğinize emin misiniz?</value></data>
+  <data name="List.Cancel" xml:space="preserve"><value>İptal</value></data>
+  <data name="List.DeleteConfirmAction" xml:space="preserve"><value>Sil</value></data>
+  <data name="List.NoData" xml:space="preserve"><value>Aktör bulunamadı.</value></data>
+
+  <data name="Delete.ConfirmBody" xml:space="preserve"><value>ilgili tüm verilerle (roller vb.) birlikte kalıcı olarak silinecektir.</value></data>
+  <data name="Delete.Irreversible" xml:space="preserve"><value>Bu işlem geri alınamaz!</value></data>
+
+  <data name="Director.Create.Title" xml:space="preserve"><value>Yeni Yönetmen Ekle</value></data>
+  <data name="Director.Create.Header" xml:space="preserve"><value>Yeni Yönetmen Ekle</value></data>
+  <data name="Director.Create.NameLabel" xml:space="preserve"><value>İsim *</value></data>
+  <data name="Director.Create.PhotoUrlLabel" xml:space="preserve"><value>Fotoğraf URL</value></data>
+  <data name="Director.Create.BirthDateLabel" xml:space="preserve"><value>Doğum Tarihi</value></data>
+  <data name="Director.Create.BirthPlaceLabel" xml:space="preserve"><value>Doğum Yeri</value></data>
+  <data name="Director.Create.HeightLabel" xml:space="preserve"><value>Boy (cm)</value></data>
+  <data name="Director.Create.SaveButton" xml:space="preserve"><value>Kaydet</value></data>
+  <data name="Director.Create.CancelButton" xml:space="preserve"><value>İptal</value></data>
+
+  <data name="Director.Edit.Title" xml:space="preserve"><value>Yönetmen Profilini Düzenle</value></data>
+  <data name="Director.Edit.SuccessMessage" xml:space="preserve"><value>Yönetmen profili başarıyla güncellendi.</value></data>
+  <data name="Director.Edit.Header" xml:space="preserve"><value>Yönetmen Profilini Düzenle</value></data>
+  <data name="Director.Edit.Subtitle" xml:space="preserve"><value>Kişisel bilgileri güncelleyin ve filmografiyi yönetin.</value></data>
+  <data name="Director.Edit.Cancel" xml:space="preserve"><value>İptal</value></data>
+  <data name="Director.Edit.SaveChanges" xml:space="preserve"><value>Değişiklikleri Kaydet</value></data>
+  <data name="Director.Edit.BasicInfo" xml:space="preserve"><value>Temel Bilgiler</value></data>
+  <data name="Director.Edit.FullName" xml:space="preserve"><value>Tam İsim</value></data>
+  <data name="Director.Edit.BirthDate" xml:space="preserve"><value>Doğum Tarihi</value></data>
+  <data name="Director.Edit.BirthPlace" xml:space="preserve"><value>Doğum Yeri</value></data>
+  <data name="Director.Edit.Height" xml:space="preserve"><value>Boy</value></data>
+  <data name="Director.Edit.HeightUnit" xml:space="preserve"><value>metre</value></data>
+  <data name="Director.Edit.Filmography" xml:space="preserve"><value>Filmografi ({0})</value></data>
+  <data name="Director.Edit.FilmColumn" xml:space="preserve"><value>Film</value></data>
+  <data name="Director.Edit.ActionColumn" xml:space="preserve"><value>İşlem</value></data>
+  <data name="Director.Edit.NoMovies" xml:space="preserve"><value>Henüz eklenmiş bir film yok.</value></data>
+  <data name="Director.Edit.ProfilePhoto" xml:space="preserve"><value>Profil Fotoğrafı</value></data>
+  <data name="Director.Edit.PhotoUrlLabel" xml:space="preserve"><value>Fotoğraf URL</value></data>
+  <data name="Director.Edit.MetaData" xml:space="preserve"><value>Meta Veri</value></data>
+  <data name="Director.Edit.SystemId" xml:space="preserve"><value>Sistem ID</value></data>
+  <data name="Director.Edit.TotalAppearances" xml:space="preserve"><value>Toplam Görünüm</value></data>
+  <data name="Director.Edit.DeleteDirectorProfile" xml:space="preserve"><value>Yönetmen Profilini Sil</value></data>
+  <data name="Director.Edit.RemoveMovieConfirm" xml:space="preserve"><value>Bu filmi yönetmenden kaldırmak istediğinize emin misiniz?</value></data>
+
+  <data name="Director.List.Title" xml:space="preserve"><value>Tüm Yönetmenler</value></data>
+  <data name="Director.List.AllDirectors" xml:space="preserve"><value>Tüm Yönetmenler</value></data>
+  <data name="Director.List.TotalFound" xml:space="preserve"><value>Toplam Bulunan</value></data>
+  <data name="Director.List.SearchPlaceholder" xml:space="preserve"><value>Yönetmen ara...</value></data>
+  <data name="Director.List.AddNew" xml:space="preserve"><value>Yeni Yönetmen Ekle</value></data>
+  <data name="Director.List.DirectorProfile" xml:space="preserve"><value>Profil</value></data>
+  <data name="Director.List.Name" xml:space="preserve"><value>İsim</value></data>
+  <data name="Director.List.BirthDate" xml:space="preserve"><value>Doğum Tarihi</value></data>
+  <data name="Director.List.MovieCount" xml:space="preserve"><value>Filmler</value></data>
+  <data name="Director.List.Actions" xml:space="preserve"><value>İşlemler</value></data>
+  <data name="Director.List.Page" xml:space="preserve"><value>Sayfa</value></data>
+  <data name="Director.List.DeleteConfirmTitle" xml:space="preserve"><value>Silme Onayı</value></data>
+  <data name="Director.List.DeleteConfirmDescription" xml:space="preserve"><value>Bu yönetmeni silmek istediğinize emin misiniz?</value></data>
+  <data name="Director.List.Cancel" xml:space="preserve"><value>İptal</value></data>
+  <data name="Director.List.DeleteConfirmAction" xml:space="preserve"><value>Sil</value></data>
+  <data name="Director.List.NoDirectorsFound" xml:space="preserve"><value>Yönetmen bulunamadı.</value></data>
+<data name="Aged" xml:space="preserve"><value>yaşında</value></data>
+
+  <data name="Director.Delete.ConfirmBody" xml:space="preserve"><value>ilgili tüm verilerle (filmler vb.) birlikte kalıcı olarak silinecektir.</value></data>
+  <data name="Director.Delete.Irreversible" xml:space="preserve"><value>Bu işlem geri alınamaz!</value></data>
+</root>

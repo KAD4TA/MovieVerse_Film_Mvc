@@ -1,0 +1,24 @@
+﻿
+.actor-header {
+    background-size: cover;
+    background-position: center;
+    background-repeat:no-repeat;
+}
+
+.glass-panel {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stats-card {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.actor-avatar-wrapper {
+    border-color: #3b82f6;
+    shadow: 0 0 40px rgba(59, 130, 246, 0.3);
+}

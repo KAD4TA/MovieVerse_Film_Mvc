@@ -1,0 +1,52 @@
+﻿@model MovieCreateUpdateViewModel
+@using System.Web
+@using MovieMvcProject.Web.Areas.Admin.Models
+
+<script src="~/js/admin/movie-create.js" asp-append-version="true"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        
+
+        // === OYUNCULAR ===
+        @if (Model.Actors != null && Model.Actors.Any())
+        {
+                foreach (var actor in Model.Actors)
+                {
+                        <text>
+                                addActor(
+                                    '@(actor.ActorId?.ToString() ?? "")',
+                                    '@Html.Raw(HttpUtility.JavaScriptStringEncode(actor.Name ?? ""))',
+                                    '@(actor.AvatarUrl ?? "")',
+                                    @(actor.ActorId.HasValue ? "true" : "false"),
+                                    '@(actor.Height?.ToString() ?? "")',
+                                    '@(actor.BirthDate?.ToString("yyyy-MM-dd") ?? "")',
+                                    '@Html.Raw(HttpUtility.JavaScriptStringEncode(actor.BirthPlace ?? ""))'
+                                );
+                        </text>
+                }
+        }
+
+        // === YÖNETMEN ===
+        @if (Model.ExistingDirectorId.HasValue || !string.IsNullOrEmpty(Model.DirectorName))
+        {
+                var dName = Model.ExistingDirectorName ?? Model.DirectorName ?? "";
+                var isDb = Model.ExistingDirectorId.HasValue;
+                var height = Model.DirectorHeightCm?.ToString() ?? "";
+                var birthDate = Model.DirectorBirthDate?.ToString("yyyy-MM-dd") ?? "";
+                var birthPlace = Model.DirectorBirthPlace ?? "";
+
+                <text>
+                        selectDirector(
+                            '@(Model.ExistingDirectorId?.ToString() ?? "")',
+                            '@Html.Raw(HttpUtility.JavaScriptStringEncode(dName))',
+                            '@(Model.DirectorPhotoUrl ?? "")',
+                            @(isDb ? "false" : "true"),
+                            '@height',
+                            '@birthDate',
+                            '@Html.Raw(HttpUtility.JavaScriptStringEncode(birthPlace))'
+                        );
+                </text>
+        }
+    });
+</script>

@@ -1,0 +1,62 @@
+﻿@using MovieMvcProject.Application.Commons
+
+@model PagedResult<WishlistViewModel>
+
+@{
+    var userId = ViewContext.RouteData.Values["id"]?.ToString() ?? "";
+    if (string.IsNullOrEmpty(userId) || Model.TotalPages <= 1)
+    {
+        return;
+    }
+}
+
+<div class="flex items-center justify-center gap-x-2 mt-12">
+    <!-- Önceki -->
+    @if (Model.HasPreviousPage)
+    {
+        <a asp-controller="Account"
+           asp-action="PublicProfile"
+           asp-route-id="@userId"
+           asp-route-page="@(Model.PageNumber - 1)"
+           class="px-6 py-3 bg-zinc-800 hover:bg-zinc-700 text-white rounded-2xl flex items-center gap-2 transition-all">
+            <span class="material-symbols-outlined">chevron_left</span>
+            Önceki
+        </a>
+    }
+
+    <!-- Sayfa Numaraları -->
+    <div class="flex gap-1">
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            if (i == Model.PageNumber)
+            {
+                <span class="w-10 h-10 flex items-center justify-center bg-white text-black font-bold rounded-2xl">
+                    @i
+                </span>
+            }
+            else
+            {
+                <a asp-controller="Account"
+                   asp-action="PublicProfile"
+                   asp-route-id="@userId"
+                   asp-route-page="@i"
+                   class="w-10 h-10 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-2xl transition-all">
+                    @i
+                </a>
+            }
+        }
+    </div>
+
+    <!-- Sonraki -->
+    @if (Model.HasNextPage)
+    {
+        <a asp-controller="Account"
+           asp-action="PublicProfile"
+           asp-route-id="@userId"
+           asp-route-page="@(Model.PageNumber + 1)"
+           class="px-6 py-3 bg-zinc-800 hover:bg-zinc-700 text-white rounded-2xl flex items-center gap-2 transition-all">
+            Sonraki
+            <span class="material-symbols-outlined">chevron_right</span>
+        </a>
+    }
+</div>

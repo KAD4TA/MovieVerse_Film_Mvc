@@ -1,0 +1,158 @@
+﻿@using Microsoft.Extensions.Localization
+@using MovieMvcProject.Domain.Resources
+@inject IStringLocalizer<EnumResource> EnumLocalizer
+@inject IStringLocalizer<ActorDirectorResource> ActorDirectorLocalizer
+@model MovieMvcProject.Application.DTOs.ResponseDto.ActorDetailDto
+
+@{
+    int? age = null;
+    if (Model.BirthDate.HasValue)
+    {
+        var today = DateTime.Today;
+        age = today.Year - Model.BirthDate.Value.Year;
+        if (Model.BirthDate.Value.Date > today.AddYears(-age.Value)) age--;
+    }
+}
+
+
+
+<main class="min-h-screen bg-[#0f121d] text-white font-sans pb-20">
+    <div class="relative min-h-[450px] actor-header flex items-center md:items-end pt-24 pb-12"
+         style="background-image: linear-gradient(to bottom, rgba(15, 18, 29, 0.7), #0f121d), url('@(string.IsNullOrEmpty(Model.AvatarUrl) ? "/profile-images/default-profile.png" : Model.AvatarUrl)');">
+        <div class="max-w-7xl mx-auto w-full px-6 md:px-10 flex flex-col md:flex-row items-center md:items-end gap-10">
+            <div class="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-blue-500 shadow-[0_0_40px_rgba(59,130,246,0.3)] flex-shrink-0 relative z-10">
+                <img src="@(string.IsNullOrEmpty(Model.AvatarUrl) ? "/profile-images/default-profile.png" : Model.AvatarUrl)"
+                     class="w-full h-full object-cover"
+                     alt="@Model.Name"
+                     onerror="this.src='/images/default-profile.png'" />
+            </div>
+            <div class="text-center md:text-left flex-1 w-full space-y-6 relative z-10">
+                <div>
+                    <h1 class="text-5xl md:text-7xl font-black italic tracking-tighter uppercase drop-shadow-lg">@Model.Name</h1>
+                    <p class="text-gray-400 mt-2 italic text-lg tracking-wide hidden md:block">@Model.Name @ActorDirectorLocalizer["ProfileSuffix"].Value</p>
+                </div>
+                <div class="stats-card rounded-2xl p-6 inline-block w-full md:w-auto mt-4">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10 md:divide-x divide-white/10">
+                        <div class="flex flex-col md:pl-0">
+                            <span class="text-[11px] text-gray-400 uppercase font-black tracking-widest mb-1">@ActorDirectorLocalizer["MoviesCountLabel"].Value</span>
+                            <div class="flex items-baseline gap-1 justify-center md:justify-start">
+                                <span class="text-3xl font-black text-blue-500 leading-none">@(Model.Movies?.TotalCount ?? 0)</span>
+                            </div>
+                        </div>
+                        @if (Model.Height.HasValue)
+                        {
+                            <div class="flex flex-col md:pl-10">
+                                <span class="text-[11px] text-gray-400 uppercase font-black tracking-widest mb-1">@ActorDirectorLocalizer["HeightLabel"].Value</span>
+                                <div class="flex items-baseline gap-1 justify-center md:justify-start">
+                                    <span class="text-2xl font-bold text-white leading-none">@Model.Height.Value</span>
+                                    <span class="text-sm text-gray-500 font-medium">cm</span>
+                                </div>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.BirthPlace))
+                        {
+                            <div class="flex flex-col md:pl-10">
+                                <span class="text-[11px] text-gray-400 uppercase font-black tracking-widest mb-1">@ActorDirectorLocalizer["BirthPlaceLabel"].Value</span>
+                                <span class="text-lg font-bold text-white leading-none mt-1 line-clamp-1">@Model.BirthPlace</span>
+                            </div>
+                        }
+                        @if (Model.BirthDate.HasValue)
+                        {
+                            <div class="flex flex-col md:pl-10">
+                                <span class="text-[11px] text-gray-400 uppercase font-black tracking-widest mb-1">@ActorDirectorLocalizer["BirthDateLabel"].Value</span>
+                                <div class="flex flex-col justify-center md:justify-start mt-1">
+                                    <span class="text-lg font-bold text-white leading-none">@Model.BirthDate.Value.ToString("dd.MM.yyyy")</span>
+                                    @if (age.HasValue)
+                                    {
+                                        <span class="text-xs text-blue-400 font-bold mt-1">(@age @ActorDirectorLocalizer["YearsOld"].Value)</span>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 md:px-10 mt-20">
+        <div class="flex items-center gap-4 mb-10">
+            <span class="w-2 h-10 bg-blue-600 rounded-full shadow-[0_0_15px_rgba(37,99,235,0.6)]"></span>
+            <h3 class="text-3xl font-black italic tracking-wide">@ActorDirectorLocalizer["FilmographyHeader"].Value</h3>
+        </div>
+
+        @if (Model.Movies != null && Model.Movies.Items.Any())
+        {
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8">
+                @foreach (var movie in Model.Movies.Items)
+                {
+                    <div class="group flex flex-col h-full">
+                        <a asp-controller="Movie" asp-action="MovieDetail" asp-route-id="@movie.MovieId" class="relative block h-full flex flex-col">
+                            <div class="relative overflow-hidden rounded-2xl aspect-[2/3] shadow-lg border border-white/5 bg-[#161a2b]">
+                                <img src="@(string.IsNullOrEmpty(movie.PosterUrl) ? "/images/no-poster.jpg" : movie.PosterUrl)"
+                                     alt="@movie.Title"
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                                     onerror="this.src='/images/default-poster.jpg'" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#0f121d]/90 via-[#0f121d]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+                                    <span class="bg-blue-600 text-white text-xs font-black px-5 py-2.5 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 shadow-lg">
+                                        @ActorDirectorLocalizer["ViewDetails"].Value
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex flex-col flex-1">
+                                <h4 class="font-bold text-gray-100 text-sm md:text-base leading-snug group-hover:text-blue-400 transition-colors line-clamp-2 mb-2">
+                                    @movie.Title
+                                </h4>
+                                <div class="mt-auto">
+                                    <div class="flex items-center justify-between mb-1.5">
+                                        <span class="text-[10px] bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded uppercase font-black tracking-wider">
+                                            @EnumLocalizer.GetLocalizedCategory(movie.Category)
+                                        </span>
+                                        <span class="text-[11px] text-gray-400 font-bold bg-white/5 px-2 py-0.5 rounded">
+                                            @movie.Year
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-yellow-500 text-sm drop-shadow-[0_0_5px_rgba(234,179,8,0.5)]">★</span>
+                                        <span class="text-xs text-gray-300 font-bold">@movie.Rating.ToString("F1")</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+
+            @if (Model.Movies.TotalPages > 1)
+            {
+                <div class="flex justify-center items-center gap-2 mt-12">
+                    @if (Model.Movies.HasPreviousPage)
+                    {
+                        <a asp-action="Details" asp-route-id="@Model.Id" asp-route-pageNumber="@(Model.Movies.PageNumber - 1)"
+                           class="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-blue-600 transition-colors">@ActorDirectorLocalizer["Previous"].Value</a>
+                    }
+                    @for (int i = 1; i <= Model.Movies.TotalPages; i++)
+                    {
+                        <a asp-action="Details" asp-route-id="@Model.Id" asp-route-pageNumber="@i"
+                               class="w-10 h-10 flex items-center justify-center rounded-lg @(i == Model.Movies.PageNumber ? "bg-blue-600 text-white" : "bg-gray-800 text-gray-400 hover:bg-gray-700")">
+                            @i
+                        </a>
+                    }
+                    @if (Model.Movies.HasNextPage)
+                    {
+                        <a asp-action="Details" asp-route-id="@Model.Id" asp-route-pageNumber="@(Model.Movies.PageNumber + 1)"
+                           class="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-blue-600 transition-colors">@ActorDirectorLocalizer["Next"].Value</a>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <div class="glass-panel p-16 md:p-24 rounded-3xl text-center border border-white/5 shadow-2xl">
+                <span class="material-symbols-outlined text-7xl text-gray-600 mb-6 block">movie_off</span>
+                <h4 class="text-2xl font-bold text-gray-300 mb-2">@ActorDirectorLocalizer["NoMoviesFoundTitle"].Value</h4>
+                <p class="text-gray-500 font-medium tracking-wide">@ActorDirectorLocalizer["NoMoviesFoundActorText"].Value</p>
+            </div>
+        }
+    </div>
+</main>

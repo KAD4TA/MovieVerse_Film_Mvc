@@ -1,0 +1,169 @@
+﻿@using MovieMvcProject.Application.Commons
+@using MovieMvcProject.Application.DTOs.LogDto
+@using Microsoft.Extensions.Localization
+@using MovieMvcProject.Web.Areas.Admin.Resources
+@model MovieMvcProject.Web.Areas.Admin.Models.LogListViewModel
+@inject IStringLocalizer<AdminLogResource> Localizer
+
+@{
+    var pagedLogs = Model.Logs;
+    var filter = Model.Filter;
+    var totalCount = pagedLogs.TotalCount;
+    var pageSize = pagedLogs.PageSize;
+    var pageNumber = pagedLogs.PageNumber;
+    var firstItemOnPage = (totalCount > 0) ? (pageNumber - 1) * pageSize + 1 : 0;
+    var lastItemOnPage = (totalCount > 0) ? Math.Min(totalCount, firstItemOnPage + pagedLogs.Items.Count - 1) : 0;
+}
+
+<div class="p-6 md:p-10 flex flex-col gap-8 min-h-screen bg-slate-50 dark:bg-[#0f172a] transition-colors duration-300">
+    <div class="flex flex-col gap-1">
+        <h2 class="text-3xl font-black tracking-tight text-slate-800 dark:text-white flex items-center gap-3">
+            <span class="material-icons-outlined text-indigo-500 dark:text-primary text-4xl drop-shadow-[0_0_8px_rgba(99,102,241,0.5)]">dvr</span>
+            @Localizer["Title_SystemLogs"]
+        </h2>
+        <p class="text-slate-500 dark:text-slate-400 text-sm ml-1 font-medium">@Localizer["Subtitle_MonitorApplicationEvents"]</p>
+    </div>
+
+    <div class="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 rounded-2xl shadow-sm dark:shadow-xl p-6 relative overflow-hidden transition-all hover:shadow-md">
+        <form asp-area="Admin" asp-controller="Log" asp-action="List" method="get" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 items-end relative z-10">
+            <div class="flex flex-col gap-2">
+                <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">@Localizer["Label_Search"]</label>
+                <div class="relative">
+                    <input asp-for="Filter.SearchTerm" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-gray-200 placeholder-slate-400 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all text-sm" placeholder="@Localizer["Placeholder_SearchTerm"]" />
+                </div>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">@Localizer["Label_StartDate"]</label>
+                <input asp-for="Filter.StartDate" type="date" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500/20 outline-none text-sm dark:[color-scheme:dark]" />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">@Localizer["Label_EndDate"]</label>
+                <input asp-for="Filter.EndDate" type="date" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500/20 outline-none text-sm dark:[color-scheme:dark]" />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">@Localizer["Label_LogLevel"]</label>
+                <select asp-for="Filter.LogLevel"
+                        class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 text-slate-700 dark:text-gray-200 focus:ring-2 focus:ring-indigo-500/20 outline-none text-sm appearance-none transition-colors">
+                    <option value="" class="bg-white dark:bg-[#1e293b] text-slate-700 dark:text-gray-200">@Localizer["Option_AllLevels"]</option>
+                    <option value="Information" class="bg-white dark:bg-[#1e293b] text-blue-500">@Localizer["Level_Information"]</option>
+                    <option value="Warning" class="bg-white dark:bg-[#1e293b] text-amber-500">@Localizer["Level_Warning"]</option>
+                    <option value="Error" class="bg-white dark:bg-[#1e293b] text-red-500">@Localizer["Level_Error"]</option>
+                    <option value="Fatal" class="bg-white dark:bg-[#1e293b] text-red-700 font-bold">@Localizer["Level_Fatal"]</option>
+                </select>
+            </div>
+            <div class="flex gap-2">
+                <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 dark:bg-primary dark:hover:bg-indigo-600 text-white h-[44px] rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-indigo-500/20 active:scale-95">
+                    <span class="material-icons-outlined text-lg">search</span> @Localizer["Button_Filter"]
+                </button>
+                <a asp-action="List" class="w-[44px] h-[44px] bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-gray-400 border border-slate-200 dark:border-white/10 rounded-xl flex items-center justify-center hover:bg-slate-200 dark:hover:bg-white/10 hover:text-slate-800 dark:hover:text-white transition-all" title="@Localizer["Title_Reset"]">
+                    <span class="material-icons-outlined text-lg">refresh</span>
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <div class="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 rounded-2xl shadow-sm dark:shadow-2xl overflow-hidden transition-all">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-50 dark:bg-black/20 border-b border-slate-200 dark:border-white/5">
+                    <tr>
+                        <th class="py-4 px-6 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-gray-500 w-48">@Localizer["Column_Timestamp"]</th>
+                        <th class="py-4 px-6 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-gray-500 w-32">@Localizer["Column_Level"]</th>
+                        <th class="py-4 px-6 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-gray-500 w-24 text-center">@Localizer["Column_Detail"]</th>
+                        <th class="py-4 px-6 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-gray-500">@Localizer["Column_Message"]</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-white/5">
+                    @foreach (var log in pagedLogs.Items)
+                    {
+                        var levelColor = GetLogLevelColorClass(log.Level);
+                        <tr class="hover:bg-slate-50 dark:hover:bg-white/5 transition-all group">
+                            <td class="py-4 px-6 text-xs font-mono text-slate-500 dark:text-gray-400">@log.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                            <td class="py-4 px-6">
+                                <span class="px-2.5 py-1 rounded-md text-[10px] font-black uppercase border @levelColor">@log.Level</span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                @if (!string.IsNullOrWhiteSpace(log.Exception))
+                                {
+                                    <button type="button"
+                                            onclick="openDetailedModal(this)"
+                                            data-error-content="@log.Exception"
+                                            class="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all border border-red-500/20 shadow-sm hover:shadow-red-500/20 active:scale-90">
+                                        <span class="material-icons-outlined text-sm pointer-events-none">visibility</span>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <span class="text-slate-300 dark:text-gray-700 text-xs font-medium italic">@Localizer["Text_NoException"]</span>
+                                }
+                            </td>
+                            <td class="py-4 px-6 text-sm text-slate-600 dark:text-gray-300 line-clamp-2 group-hover:text-slate-900 dark:group-hover:text-white transition-all" title="@log.Message">@log.Message</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4 px-2 mb-10">
+        <div class="text-xs font-bold text-slate-400 dark:text-gray-500">
+            @Localizer["Pagination_Showing", totalCount, firstItemOnPage, lastItemOnPage]
+        </div>
+        <nav class="flex items-center gap-1.5">
+            <a asp-action="List" asp-all-route-data="filter.ToRouteDictionary()" asp-route-PageNumber="@(pageNumber - 1)"
+                   class="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1e293b] text-slate-400 dark:text-gray-400 hover:border-indigo-500 dark:hover:border-primary hover:text-indigo-500 dark:hover:text-primary transition-all @(!pagedLogs.HasPreviousPage ? "opacity-30 pointer-events-none" : "shadow-sm")">
+                <span class="material-icons-outlined text-sm">chevron_left</span>
+            </a>
+            @for (int i = Math.Max(1, pageNumber - 2); i <= Math.Min(pagedLogs.TotalPages, Math.Max(1, pageNumber - 2) + 4); i++)
+            {
+                <a asp-action="List" asp-all-route-data="filter.ToRouteDictionary()" asp-route-PageNumber="@i"
+                       class="w-9 h-9 flex items-center justify-center rounded-lg text-xs font-bold transition-all border
+                    @(i == pageNumber
+                                                                         ? "bg-indigo-600 dark:bg-primary text-white border-indigo-600 dark:border-primary shadow-md shadow-indigo-500/20"
+                                                                         : "bg-white dark:bg-[#1e293b] border-slate-200 dark:border-white/10 text-slate-500 dark:text-gray-400 hover:border-slate-400 dark:hover:border-white/30 hover:text-slate-800 dark:hover:text-white shadow-sm")">
+                    @i
+                </a>
+            }
+            <a asp-action="List" asp-all-route-data="filter.ToRouteDictionary()" asp-route-PageNumber="@(pageNumber + 1)"
+                   class="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1e293b] text-slate-400 dark:text-gray-400 hover:border-indigo-500 dark:hover:border-primary hover:text-indigo-500 dark:hover:text-primary transition-all @(!pagedLogs.HasNextPage ? "opacity-30 pointer-events-none" : "shadow-sm")">
+                <span class="material-icons-outlined text-sm">chevron_right</span>
+            </a>
+        </nav>
+    </div>
+</div>
+
+<div id="errorDetailModal" class="hidden fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/90 backdrop-blur-sm">
+    <div class="bg-white dark:bg-[#1e293b] w-full max-w-5xl rounded-2xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden scale-95 transition-transform duration-300" id="modalContainer">
+        <div class="p-4 border-b border-slate-100 dark:border-white/5 flex justify-between items-center bg-slate-50 dark:bg-white/5">
+            <h3 class="font-black text-red-500 flex items-center gap-2 text-xs uppercase tracking-widest">
+                <span class="material-icons-outlined text-lg">bug_report</span> @Localizer["Modal_ExceptionDetail"]
+            </h3>
+            <button onclick="closeDetailedModal()" class="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-200 dark:hover:bg-white/10 hover:text-slate-800 dark:hover:text-white transition-all active:scale-90">
+                <span class="material-icons-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-6">
+            <pre id="errorModalBody" class="text-[11px] font-mono text-slate-600 dark:text-gray-400 bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 p-6 rounded-2xl overflow-auto max-h-[65vh] whitespace-pre-wrap leading-relaxed scrollbar-thin scrollbar-thumb-indigo-500/20"></pre>
+        </div>
+        <div class="p-4 bg-slate-50 dark:bg-white/5 border-t border-slate-100 dark:border-white/5 flex justify-end gap-3">
+            <button onclick="closeDetailedModal()" class="px-8 py-2.5 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-white rounded-xl text-xs font-bold transition-all border border-slate-200 dark:border-white/10 active:scale-95">@Localizer["Button_Close"]</button>
+        </div>
+    </div>
+</div>
+
+@functions {
+    private string GetLogLevelColorClass(string level)
+    {
+        return level?.ToLower() switch
+        {
+            "error" => "bg-red-500/10 text-red-600 dark:text-red-500 border-red-500/20",
+            "warning" => "bg-amber-500/10 text-amber-600 dark:text-amber-500 border-amber-500/20",
+            "information" => "bg-blue-500/10 text-blue-600 dark:text-blue-500 border-blue-500/20",
+            "fatal" => "bg-red-600 text-white border-red-700 shadow-md shadow-red-500/20",
+            _ => "bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-gray-500 border-slate-200 dark:border-white/10"
+        };
+    }
+}
+
+<link rel="stylesheet" href="~/css/adminlog/log-list.css" asp-append-version="true" />
+<script src="~/js/adminlog/log-list.js" asp-append-version="true"></script>

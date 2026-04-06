@@ -1,0 +1,175 @@
+﻿@using MovieMvcProject.Web.Areas.Admin.Models
+@using MovieMvcProject.Web.Areas.Admin.Resources
+@model DirectorEditViewModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<AdminActorDirectorResource> DirectorLocalizer
+
+<div class="max-w-5xl mx-auto space-y-8 pb-12">
+    @if (TempData["Success"] != null)
+    {
+        <div class="bg-emerald-100 dark:bg-emerald-900/30 border border-emerald-400 dark:border-emerald-500 text-emerald-700 dark:text-emerald-300 px-6 py-4 rounded-2xl flex items-center gap-3 text-sm font-medium animate-in fade-in duration-500">
+            <span class="material-icons-outlined">check_circle</span>
+            @DirectorLocalizer["Director.Edit.SuccessMessage"]
+        </div>
+    }
+    <form id="EditDirectorForm" asp-area="Admin" asp-controller="AdminDirector" asp-action="Edit" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="DirectorId" />
+    </form>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">@DirectorLocalizer["Director.Edit.Header"]</h1>
+            <p class="text-slate-500 dark:text-gray-400 mt-1">@DirectorLocalizer["Director.Edit.Subtitle"]</p>
+        </div>
+        <div class="flex items-center gap-4">
+            <a asp-area="Admin" asp-controller="AdminDirector" asp-action="Index"
+                   class="px-6 py-3 text-sm font-semibold text-slate-600 dark:text-gray-400 bg-white dark:bg-surface-dark border border-slate-200 dark:border-white/10 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
+                @DirectorLocalizer["Director.Edit.Cancel"]
+            </a>
+            <button type="submit" form="EditDirectorForm"
+                    class="flex items-center gap-3 px-6 py-3 text-sm font-bold text-white bg-[#8B5CF6] hover:bg-[#7C3AED] rounded-2xl shadow-lg shadow-[#8B5CF6]/30 transition-all hover:-translate-y-0.5 active:translate-y-0">
+                <span class="material-icons-outlined text-xl">save</span>
+                @DirectorLocalizer["Director.Edit.SaveChanges"]
+            </button>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-8">
+            <div class="bg-white dark:bg-surface-dark rounded-3xl border border-slate-200 dark:border-white/10 p-8 shadow-sm">
+                <h2 class="flex items-center gap-3 text-xl font-bold text-slate-900 dark:text-white mb-8">
+                    <span class="material-icons-outlined text-[#8B5CF6]">person</span>
+                    @DirectorLocalizer["Director.Edit.BasicInfo"]
+                </h2>
+                <div class="grid gap-8">
+                    <div>
+                        <label asp-for="Name" class="block text-sm font-semibold text-slate-600 dark:text-gray-400 mb-2">@DirectorLocalizer["Director.Edit.FullName"]</label>
+                        <input asp-for="Name" form="EditDirectorForm" placeholder="Enter director name"
+                               class="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-5 py-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#8B5CF6]/30 outline-none transition-all" />
+                        <span asp-validation-for="Name" class="text-red-500 text-xs mt-1 block"></span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <label asp-for="BirthDate" class="block text-sm font-semibold text-slate-600 dark:text-gray-400 mb-2">@DirectorLocalizer["Director.Edit.BirthDate"]</label>
+                            <input asp-for="BirthDate" type="date" form="EditDirectorForm"
+                                   class="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-5 py-4 text-slate-900 dark:text-white outline-none" />
+                        </div>
+                        <div>
+                            <label asp-for="BirthPlace" class="block text-sm font-semibold text-slate-600 dark:text-gray-400 mb-2">@DirectorLocalizer["Director.Edit.BirthPlace"]</label>
+                            <input asp-for="BirthPlace" form="EditDirectorForm" placeholder="City, Country"
+                                   class="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-5 py-4 text-slate-900 dark:text-white outline-none" />
+                        </div>
+                    </div>
+                    <div>
+                        <label asp-for="Height" class="block text-sm font-semibold text-slate-600 dark:text-gray-400 mb-2">@DirectorLocalizer["Director.Edit.Height"]</label>
+                        <div class="flex gap-3">
+                            <input asp-for="Height" type="number" step="0.01" form="EditDirectorForm" placeholder="1.85"
+                                   class="w-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-5 py-4 text-slate-900 dark:text-white outline-none" />
+                            <span class="inline-flex items-center px-5 text-sm font-medium text-slate-500 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl">@DirectorLocalizer["Director.Edit.HeightUnit"]</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-surface-dark rounded-3xl border border-slate-200 dark:border-white/10 flex flex-col shadow-sm filmography-container">
+                <div class="px-8 py-6 border-b border-slate-200 dark:border-white/10 flex items-center justify-between bg-slate-50/50 dark:bg-white/5 rounded-t-3xl">
+                    <h2 class="flex items-center gap-3 text-xl font-bold text-slate-900 dark:text-white">
+                        <span class="material-icons-outlined text-[#8B5CF6]">movie_filter</span>
+                        @string.Format(DirectorLocalizer["Director.Edit.Filmography"], Model.Movies?.Count ?? 0)
+                    </h2>
+                </div>
+                <div class="flex-1 overflow-auto">
+                    <table class="w-full">
+                        <thead class="sticky top-0 bg-white dark:bg-surface-dark z-10 border-b border-slate-200 dark:border-white/10">
+                            <tr>
+                                <th class="px-8 py-4 text-left font-semibold text-slate-500 dark:text-gray-400">@DirectorLocalizer["Director.Edit.FilmColumn"]</th>
+                                <th class="px-8 py-4 text-right font-semibold text-slate-500 dark:text-gray-400 w-20">@DirectorLocalizer["Director.Edit.ActionColumn"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-white/10">
+                            @if (Model.Movies != null && Model.Movies.Any())
+                            {
+                                foreach (var movie in Model.Movies)
+                                {
+                                    <tr class="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
+                                        <td class="px-8 py-4">
+                                            <div class="flex items-center gap-4">
+                                                <div class="w-12 h-16 flex-shrink-0 bg-slate-200 dark:bg-zinc-800 rounded-lg overflow-hidden shadow-sm">
+                                                    <img src="@(string.IsNullOrEmpty(movie.PosterUrl) ? "images/no-poster.jpg" : movie.PosterUrl)"
+                                                         class="w-full h-full object-cover" alt="Poster" />
+                                                </div>
+                                                <div>
+                                                    <div class="font-semibold text-slate-900 dark:text-white group-hover:text-[#8B5CF6] transition-colors">@movie.Title</div>
+                                                    <div class="text-xs text-slate-500 font-medium">@movie.Year</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-right px-8">
+                                            <button type="button"
+                                                    onclick="removeMovieFromDirector('@Model.DirectorId', '@movie.MovieId', '@DirectorLocalizer["Director.Edit.RemoveMovieConfirm"]')"
+                                                    class="text-slate-400 hover:text-red-500 p-2 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all">
+                                                <span class="material-icons-outlined">delete</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="2" class="text-center py-20 text-slate-400 font-medium">@DirectorLocalizer["Director.Edit.NoMovies"]</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="space-y-8">
+            <div class="bg-white dark:bg-surface-dark rounded-3xl border border-slate-200 dark:border-white/10 p-8 shadow-sm">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-8">@DirectorLocalizer["Director.Edit.ProfilePhoto"]</h2>
+                <div class="flex flex-col items-center gap-6">
+                    <div class="relative w-48 h-64 rounded-3xl overflow-hidden shadow-2xl ring-4 ring-white dark:ring-slate-800 bg-slate-100 dark:bg-zinc-800">
+                        <img src="@(string.IsNullOrEmpty(Model.PhotoUrl) ? "/profile-images/default-profile.png" : Model.PhotoUrl)"
+                             class="w-full h-full object-cover" id="photoPreview" alt="Director Preview" />
+                    </div>
+                    <div class="w-full space-y-2">
+                        <label asp-for="PhotoUrl" class="block text-sm font-semibold text-slate-600 dark:text-gray-400">@DirectorLocalizer["Director.Edit.PhotoUrlLabel"]</label>
+                        <div class="flex w-full items-stretch gap-2">
+                            <input asp-for="PhotoUrl" form="EditDirectorForm" id="PhotoUrlInput"
+                                   class="flex-1 min-w-0 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-[#8B5CF6]/30 outline-none transition-all" />
+                            <button type="button"
+                                    onclick="const val = document.getElementById('PhotoUrlInput').value; navigator.clipboard.writeText(val); alert('URL Copied to Clipboard!');"
+                                    class="flex-shrink-0 px-4 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl hover:bg-slate-200 dark:hover:bg-white/10 transition-colors group">
+                                <span class="material-icons-outlined text-slate-500 group-hover:text-[#8B5CF6] text-base">content_copy</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-surface-dark rounded-3xl border border-slate-200 dark:border-white/10 p-8 shadow-sm">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6">@DirectorLocalizer["Director.Edit.MetaData"]</h2>
+                <div class="space-y-4 text-sm mb-10">
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-500">@DirectorLocalizer["Director.Edit.SystemId"]</span>
+                        <span class="font-mono text-slate-400 text-xs">#@Model.DirectorId.ToString().ToUpper().Substring(0, 8)</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-500">@DirectorLocalizer["Director.Edit.TotalAppearances"]</span>
+                        <span class="bg-[#8B5CF6]/10 text-[#8B5CF6] px-3 py-1 rounded-full font-bold text-xs">@(Model.Movies?.Count ?? 0) Movies</span>
+                    </div>
+                </div>
+                <form asp-area="Admin" asp-controller="AdminDirector" asp-action="Delete" method="post"
+                      onsubmit="return confirm('⚠️ CRITICAL: Are you sure you want to delete this director permanently?');">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.DirectorId" />
+                    <button type="submit"
+                            class="w-full py-4 text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 font-bold rounded-2xl border border-red-200 dark:border-red-900/30 transition-all flex items-center justify-center gap-2">
+                        <span class="material-icons-outlined">delete_forever</span>
+                        @DirectorLocalizer["Director.Edit.DeleteDirectorProfile"]
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

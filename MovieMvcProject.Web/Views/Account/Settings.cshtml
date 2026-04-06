@@ -1,0 +1,104 @@
+﻿@model MovieMvcProject.Web.Models.SettingsPageViewModel
+@using MovieMvcProject.Domain.Enums
+@using Microsoft.Extensions.Localization
+@using MovieMvcProject.Domain.Resources
+@using MovieMvcProject.Web.Helpers
+
+@inject IStringLocalizer<MenuResource> MenuLocalizer
+@inject IStringLocalizer<UserResource> Localizer
+@inject MovieMvcProject.Application.Interfaces.ILocalization.ILocalizationService Loc
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = MenuLocalizer["Settings"] ?? "Ayarlar";
+    var activeTab = Model?.ActiveTab ?? "profile";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link href="~/css/settings/settings.css" rel="stylesheet" asp-append-version="true" />
+}
+
+<div class="min-h-screen bg-[#0f1117] text-gray-200 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto">
+        <div class="mb-10">
+            <h1 class="text-4xl font-extrabold text-white">@ViewData["Title"]</h1>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-10">
+            <aside class="lg:w-1/4">
+                <nav class="bg-gray-900/50 border border-white/5 rounded-2xl p-3 sticky top-8">
+                    <a href="javascript:void(0)" data-tab="profile" class="settings-tab block px-4 py-3 rounded-xl font-semibold text-sm mb-2">
+                        @Localizer["ProfileTab"]
+                    </a>
+                    <a href="javascript:void(0)" data-tab="security" class="settings-tab block px-4 py-3 rounded-xl font-semibold text-sm">
+                        @Localizer["SecurityTab"]
+                    </a>
+                </nav>
+            </aside>
+
+            <main class="flex-1">
+                <form id="settingsForm" asp-action="Settings" method="post" enctype="multipart/form-data"
+                      class="bg-gray-900/40 border border-white/10 rounded-3xl overflow-hidden mb-8">
+                    
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="UserId" />
+                    <input type="hidden" asp-for="ActiveTab" id="ActiveTab" />
+
+                    <div class="p-8 space-y-6">
+                        <partial name="Account/Settings/_ProfileTab" for="@Model" />
+                        <partial name="Account/Settings/_SecurityTab" for="@Model" />
+                    </div>
+
+                    <div class="px-8 py-6 bg-black/30 flex justify-end border-t border-white/5">
+                        <button type="submit" class="bg-red-600 hover:bg-red-500 text-white font-bold px-10 py-3 rounded-xl transition">
+                            @Localizer["SaveButton"]
+                        </button>
+                    </div>
+                </form>
+            </main>
+        </div>
+    </div>
+</div>
+
+
+<div id="deleteConfirmModal" class="fixed inset-0 z-[999] hidden items-center justify-center p-4">
+    <div class="fixed inset-0 bg-black/90 backdrop-blur-md" onclick="hideDeleteModal()"></div>
+    
+    <div class="relative bg-[#1a1d24] border border-white/10 rounded-3xl p-8 max-w-md w-full shadow-2xl">
+        <div class="text-center">
+            <div class="w-20 h-20 bg-red-600/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span class="material-symbols-outlined text-red-500 text-4xl">warning</span>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-3">@Localizer["DeleteAccountButton"]</h3>
+            <p class="text-gray-400 mb-8">@Localizer["DeleteConfirmMessage"]</p>
+            
+            <div class="flex gap-4">
+                <button type="button" onclick="hideDeleteModal()" class="flex-1 px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white font-bold rounded-xl transition">
+                    @MenuLocalizer["Cancel"]
+                </button>
+                <button type="button" onclick="executeDelete()" class="flex-1 px-6 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl transition">
+                    @Localizer["DeleteAccountButton"]
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="deleteAccountForm" asp-controller="Account" asp-action="DeleteAccount" method="post" class="hidden">
+    @Html.AntiForgeryToken()
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        window.SettingsConfig = {
+            activeTab: "@activeTab",
+            messages: {
+                imageSizeError: "@Html.Raw(Localizer["ImageSizeError"].Value.Replace("'", "\\'"))",
+                imageTypeError: "@Html.Raw(Localizer["ImageTypeError"].Value.Replace("'", "\\'"))"
+            }
+        };
+    </script>
+    <script src="~/js/settings/settings.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>1.3</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <data name="Create.Title" xml:space="preserve"><value>Add New Actor</value></data>
+  <data name="Create.Header" xml:space="preserve"><value>Add New Actor</value></data>
+  <data name="Create.NameLabel" xml:space="preserve"><value>Name *</value></data>
+  <data name="Create.PhotoUrlLabel" xml:space="preserve"><value>Photo URL</value></data>
+  <data name="Create.BirthDateLabel" xml:space="preserve"><value>Birth Date</value></data>
+  <data name="Create.BirthPlaceLabel" xml:space="preserve"><value>Birth Place</value></data>
+  <data name="Create.HeightLabel" xml:space="preserve"><value>Height (cm)</value></data>
+  <data name="Create.SaveButton" xml:space="preserve"><value>Save</value></data>
+  <data name="Create.CancelButton" xml:space="preserve"><value>Cancel</value></data>
+
+  <data name="Edit.Title" xml:space="preserve"><value>Edit Actor Profile</value></data>
+  <data name="Edit.SuccessMessage" xml:space="preserve"><value>Actor profile updated successfully.</value></data>
+  <data name="Edit.Header" xml:space="preserve"><value>Edit Actor Profile</value></data>
+  <data name="Edit.Subtitle" xml:space="preserve"><value>Update personal details and manage filmography.</value></data>
+  <data name="Edit.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Edit.SaveChanges" xml:space="preserve"><value>Save Changes</value></data>
+  <data name="Edit.BasicInfo" xml:space="preserve"><value>Basic Information</value></data>
+  <data name="Edit.FullName" xml:space="preserve"><value>Full Name</value></data>
+  <data name="Edit.BirthDate" xml:space="preserve"><value>Birth Date</value></data>
+  <data name="Edit.BirthPlace" xml:space="preserve"><value>Birth Place</value></data>
+  <data name="Edit.Height" xml:space="preserve"><value>Height</value></data>
+  <data name="Edit.HeightUnit" xml:space="preserve"><value>meters</value></data>
+  <data name="Edit.Filmography" xml:space="preserve"><value>Filmography ({0})</value></data>
+  <data name="Edit.FilmColumn" xml:space="preserve"><value>Film</value></data>
+  <data name="Edit.ActionColumn" xml:space="preserve"><value>Action</value></data>
+  <data name="Edit.NoMovies" xml:space="preserve"><value>No movies attached yet.</value></data>
+  <data name="Edit.ProfilePhoto" xml:space="preserve"><value>Profile Photo</value></data>
+  <data name="Edit.PhotoUrlLabel" xml:space="preserve"><value>Photo URL</value></data>
+  <data name="Edit.MetaData" xml:space="preserve"><value>Meta Data</value></data>
+  <data name="Edit.SystemId" xml:space="preserve"><value>System ID</value></data>
+  <data name="Edit.TotalAppearances" xml:space="preserve"><value>Total Appearances</value></data>
+  <data name="Edit.DeleteActor" xml:space="preserve"><value>Delete Actor Profile</value></data>
+  <data name="Edit.RemoveMovieConfirm" xml:space="preserve"><value>Are you sure you want to remove this movie from the actor?</value></data>
+
+  <data name="List.Title" xml:space="preserve"><value>All Actors</value></data>
+  <data name="List.AllActors" xml:space="preserve"><value>All Actors</value></data>
+  <data name="List.TotalFound" xml:space="preserve"><value>Total Found</value></data>
+  <data name="List.SearchPlaceholder" xml:space="preserve"><value>Search actor...</value></data>
+  <data name="List.AddNew" xml:space="preserve"><value>Add New Actor</value></data>
+  <data name="List.Profile" xml:space="preserve"><value>Profile</value></data>
+  <data name="List.Name" xml:space="preserve"><value>Name</value></data>
+  <data name="List.BirthDate" xml:space="preserve"><value>Birth Date</value></data>
+  <data name="List.MovieCount" xml:space="preserve"><value>Movies</value></data>
+  <data name="List.Actions" xml:space="preserve"><value>Actions</value></data>
+  <data name="List.Page" xml:space="preserve"><value>Page</value></data>
+  <data name="List.DeleteConfirmTitle" xml:space="preserve"><value>Delete Confirmation</value></data>
+  <data name="List.DeleteConfirmDescription" xml:space="preserve"><value>Are you sure you want to delete this actor?</value></data>
+  <data name="List.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="List.DeleteConfirmAction" xml:space="preserve"><value>Delete</value></data>
+  <data name="List.NoData" xml:space="preserve"><value>No actors found.</value></data>
+
+  <data name="Delete.ConfirmBody" xml:space="preserve"><value>will be permanently deleted along with all related data (roles, etc.).</value></data>
+  <data name="Delete.Irreversible" xml:space="preserve"><value>This action cannot be undone!</value></data>
+
+  <data name="Director.Create.Title" xml:space="preserve"><value>Add New Director</value></data>
+  <data name="Director.Create.Header" xml:space="preserve"><value>Add New Director</value></data>
+  <data name="Director.Create.NameLabel" xml:space="preserve"><value>Name *</value></data>
+  <data name="Director.Create.PhotoUrlLabel" xml:space="preserve"><value>Photo URL</value></data>
+  <data name="Director.Create.BirthDateLabel" xml:space="preserve"><value>Birth Date</value></data>
+  <data name="Director.Create.BirthPlaceLabel" xml:space="preserve"><value>Birth Place</value></data>
+  <data name="Director.Create.HeightLabel" xml:space="preserve"><value>Height (cm)</value></data>
+  <data name="Director.Create.SaveButton" xml:space="preserve"><value>Save</value></data>
+  <data name="Director.Create.CancelButton" xml:space="preserve"><value>Cancel</value></data>
+
+  <data name="Director.Edit.Title" xml:space="preserve"><value>Edit Director Profile</value></data>
+  <data name="Director.Edit.SuccessMessage" xml:space="preserve"><value>Director profile updated successfully.</value></data>
+  <data name="Director.Edit.Header" xml:space="preserve"><value>Edit Director Profile</value></data>
+  <data name="Director.Edit.Subtitle" xml:space="preserve"><value>Update personal details and manage filmography.</value></data>
+  <data name="Director.Edit.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Director.Edit.SaveChanges" xml:space="preserve"><value>Save Changes</value></data>
+  <data name="Director.Edit.BasicInfo" xml:space="preserve"><value>Basic Information</value></data>
+  <data name="Director.Edit.FullName" xml:space="preserve"><value>Full Name</value></data>
+  <data name="Director.Edit.BirthDate" xml:space="preserve"><value>Birth Date</value></data>
+  <data name="Director.Edit.BirthPlace" xml:space="preserve"><value>Birth Place</value></data>
+  <data name="Director.Edit.Height" xml:space="preserve"><value>Height</value></data>
+  <data name="Director.Edit.HeightUnit" xml:space="preserve"><value>meters</value></data>
+  <data name="Director.Edit.Filmography" xml:space="preserve"><value>Filmography ({0})</value></data>
+  <data name="Director.Edit.FilmColumn" xml:space="preserve"><value>Film</value></data>
+  <data name="Director.Edit.ActionColumn" xml:space="preserve"><value>Action</value></data>
+  <data name="Director.Edit.NoMovies" xml:space="preserve"><value>No movies attached yet.</value></data>
+  <data name="Director.Edit.ProfilePhoto" xml:space="preserve"><value>Profile Photo</value></data>
+  <data name="Director.Edit.PhotoUrlLabel" xml:space="preserve"><value>Photo URL</value></data>
+  <data name="Director.Edit.MetaData" xml:space="preserve"><value>Meta Data</value></data>
+  <data name="Director.Edit.SystemId" xml:space="preserve"><value>System ID</value></data>
+  <data name="Director.Edit.TotalAppearances" xml:space="preserve"><value>Total Appearances</value></data>
+  <data name="Director.Edit.DeleteDirectorProfile" xml:space="preserve"><value>Delete Director Profile</value></data>
+  <data name="Director.Edit.RemoveMovieConfirm" xml:space="preserve"><value>Are you sure you want to remove this movie from the director?</value></data>
+
+  <data name="Director.List.Title" xml:space="preserve"><value>All Directors</value></data>
+  <data name="Director.List.AllDirectors" xml:space="preserve"><value>All Directors</value></data>
+  <data name="Director.List.TotalFound" xml:space="preserve"><value>Total Found</value></data>
+  <data name="Director.List.SearchPlaceholder" xml:space="preserve"><value>Search director...</value></data>
+  <data name="Director.List.AddNew" xml:space="preserve"><value>Add New Director</value></data>
+  <data name="Director.List.DirectorProfile" xml:space="preserve"><value>Profile</value></data>
+  <data name="Director.List.Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Director.List.BirthDate" xml:space="preserve"><value>Birth Date</value></data>
+  <data name="Director.List.MovieCount" xml:space="preserve"><value>Movies</value></data>
+  <data name="Director.List.Actions" xml:space="preserve"><value>Actions</value></data>
+  <data name="Director.List.Page" xml:space="preserve"><value>Page</value></data>
+  <data name="Director.List.DeleteConfirmTitle" xml:space="preserve"><value>Delete Confirmation</value></data>
+  <data name="Director.List.DeleteConfirmDescription" xml:space="preserve"><value>Are you sure you want to delete this director?</value></data>
+  <data name="Director.List.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Director.List.DeleteConfirmAction" xml:space="preserve"><value>Delete</value></data>
+  <data name="Director.List.NoDirectorsFound" xml:space="preserve"><value>No directors found.</value></data>
+<data name="Aged" xml:space="preserve"><value>years old</value></data>
+
+  <data name="Director.Delete.ConfirmBody" xml:space="preserve"><value>will be permanently deleted along with all related data (films, etc.).</value></data>
+  <data name="Director.Delete.Irreversible" xml:space="preserve"><value>This action cannot be undone!</value></data>
+</root>
