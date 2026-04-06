@@ -86,7 +86,7 @@ MovieVerse, \*\*.NET 9\*\* ve \*\*Clean Architecture\*\* prensipleriyle gelişti
 
 ```bash
 
-git clone \[https://github.com/KAD4TA/MovieVerse_Film_Mvc.git](https://github.com/KAD4TA/MovieVerse_Film_Mvc.git)
+git clone https://github.com/KAD4TA/MovieVerse_Film_Mvc.git
 
 cd MovieVerse_Film_Mvc
 
